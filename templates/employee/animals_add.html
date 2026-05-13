@@ -1,0 +1,62 @@
+{% extends 'employee/base_forms.html' %}
+
+{% block content %}
+	<div class="main_container">
+     {% if request.resolver_match.url_name == 'add_animal' %}
+        <h1>Dodaj zwierzaka: </h1>
+     {% else %}
+         <h1>Edytuj zwierza: </h1>
+     {% endif %}
+     <div class="main_form_box">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form_box">
+                        <label for="{{ form.name.id_for_label }}">Imię zwierzaka:</label><br>
+                        {{ form.name }}
+                    </div>
+                    <div class="form_box">
+                        <label for="{{ form.description.id_for_label }}">Opis:</label><br>
+                        {{ form.description }}
+                    </div>
+                    <div class="form_box">
+                        <label for="{{ form.admission_date.id_for_label }}">Data przyjęcia:</label><br>
+                        {{ form.admission_date }}
+                    </div>
+                    <div class="form_box">
+                        <label for="{{ form.birth_date.id_for_label }}">Data urodzenia:</label><br>
+                        {{ form.birth_date }}
+                    </div>
+                    <div class="form_box">
+                        <label for="{{ form.weight.id_for_label }}">Waga:</label><br>
+                        {{ form.weight }}
+                    </div>
+                    <div class="form_box">
+                        <label for="{{ form.gender.id_for_label }}">Płeć:</label><br>
+                        {{ form.gender }}
+                    </div>
+                    <div class="form_box">
+                        <label for="{{ form.category.id_for_label }}">Wybierz kategorię:</label><br>
+                        {{ form.category }}
+                    </div>
+                    <div class="form_box_image">
+                        <label for="{{ form.image.id_for_label }}">Wybierz zdjęcie:</label><br>
+                        {{ form.image }}
+                    </div>
+                    <div class="submit_button">
+                    {% if request.resolver_match.url_name == 'add_animal' %}
+                    <button type="submit">Dodaj zwierzaka</button>
+
+                    {% else %}
+                     <button type="submit">Zapisz</button>
+                    {% endif %}
+                    </div>
+                </form>
+            </div>
+         </div>
+    {% if form.errors %}
+        <div class="error_box">
+            <p>Please correct the errors below:</p>
+            {{ form.errors }}
+        </div>
+    {% endif %}
+{% endblock %}

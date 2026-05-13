@@ -1,0 +1,180 @@
+
+:root {
+    --primary-emp-color: #1c1d1f;
+    --secondary-emp-color: #26292d;
+    --background-emp-color: #efefef;
+    --button-emp-color: #515151cc;
+    --hover-emp-button-color: #515151e0;
+    --product-emp-hover-color: #f3f3f3;
+    --products-emp-back-color: #f3f3f3;
+    --dark-text: #000000;
+    --white-text: #ffffff;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html{
+    scroll-behavior: smooth;
+}
+body {
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: uppercase;
+    background-color: var(--background-emp-color);
+}
+/* 4. Navbar Styling */
+nav {
+    z-index: 100;
+    background-color: var(--secondary-emp-color);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--white-text);
+    margin-bottom:20px;
+    position: sticky;
+    top: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2)
+}
+.nav_menu {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.nav_menu a {
+    color: var(--white-text);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color:var(--button-emp-color);
+    transition: all 0.3s ease;
+}
+.nav_menu a:hover {
+    background-color: var(--hover-emp-button-color);
+    transform: translateY(-2px);
+}
+.nav_menu a:visited {
+    color: var(--white-text);
+    text-decoration: none;
+}
+
+.user_panel {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+.user_section {
+    background-color: var(--white-text);
+    padding: 8px 16px;
+    color: var(--dark-text);
+    display: flex;
+    align-content: center;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+.user_controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.user_controls a {
+    color: var(--white-text);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: var(--button-emp-color);
+    transition: all 0.3s ease;
+}
+.user_controls a:hover {
+    background-color: var(--hover-emp-button-color);
+    transform: translateY(-2px);
+}
+.user_controls a:visited{
+    color: var(--white-text);
+    text-decoration: none;
+}
+
+.nav_button {
+    background-color: var(--button-emp-color);
+    color: var(--white-text);
+    opacity: 0.75;
+    padding: 8px 16px;
+    border-radius: 20px;
+    height: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+.nav_button:hover {
+    background-color: var(--hover-emp-button-color);
+    transform: translateY(-2px);
+}
+/*Main product container*/
+.main_container {
+    min-height: 800px;
+    min-width: 1000px;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    border-radius: 30px;
+    background-color: var(--background-emp-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.main_container h1 {
+    padding: 25px 30px;
+    height: auto;
+    color: var(--white-text);
+    margin: 20px;
+    border-radius: 25px;
+    background-color: var(--primary-emp-color);
+    font-size: 40px;
+    font-weight: 700;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+/*footer*/
+footer {
+    margin-top: 50px;
+    padding: 20px;
+    width: 100%;
+    color: var(--dark-text);
+    background-color: var(--button-emp-color);
+}
+footer h4 {
+    align-content: space-between;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: var(--white-text);
+}
+footer ul {
+    margin-left: 40px;
+}
+footer li {
+    margin-bottom: 10px;
+    color: var(--white-text);
+}
+button:active {
+    border: inset 2px;
+}
+/* ERROR BOX */
+.error_box {
+    color: whitesmoke;
+    background: #515151e0;
+    padding: 15px;
+    width: 100%;
+    margin: 15px 0;
+    border-radius: 12px;
+    border: 3px solid #000000;
+    font-size: 13px;
+    line-height: 1.6;
+}

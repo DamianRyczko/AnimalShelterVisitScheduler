@@ -1,0 +1,48 @@
+{% extends 'employee/base_employee.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/employee/employee_product_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/employee/style_employee.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="main_container">
+    <h1>Panel Zwirzaków</h1>
+        <div class ="item_section">
+            {% for animal in animals %}
+             <div class="item_card">
+                <div class="item_miniature">
+                        <img src="{{ animal.image.url }}" alt="{{ animal.title }}">
+                    </div>
+                    <div class="item_info">
+                        <h2>{{ animal.title }}</h2>
+                        <div class="description_box">Opis: <p>{{ animal.description }}</p></div>
+                        <h4>{{ animal.weight }} kg</h4>
+                        <h4>Urodziny: {{ animal.birth_date }} </h4>
+
+                        <div class="button_box">
+                            <h4>{{ animal.updated_at }}</h4>
+                            <a href="{% url 'edit_animal' animal.id %}">
+                                <button class="function_button">Edutuj</button>
+                            </a>
+                            <form action="{% url 'delete_animal' animal.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="function_button">
+                                    Usuń
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    </div>
+                {% empty %}
+                    <p>No cats available right now :(</p>
+                {% endfor %}
+        <a href="{% url 'add_animal' %}">
+            <div class="add_card">
+                <h2>+</h2>
+            </div>
+        </a>
+        </div>
+    </div>
+{% endblock %}

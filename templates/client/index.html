@@ -1,0 +1,80 @@
+{% extends 'client/base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{%  static 'css/client/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/client/index_styles.css' %}">
+{% endblock %}
+
+{% block banner %}
+    <div class = "banner">
+        <div class = "banner_title_box">
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class = "main_product_container">
+        <div class ="left_section">
+            <div class="filter_form_box">
+                <form method="get">
+                    <div class="filter-box">
+                        <label for="{{ filter.form.title.id_for_label }}">Szukaj produkt:</label><br>
+                        {{ filter.form.title }}
+                    </div>
+
+                    <div class="filter-box">
+                        <label for="{{ filter.form.category.id_for_label }}">Kategoria:</label><br>
+                        {{ filter.form.category }}
+                    </div>
+                    <div class="filter-box">
+                        <label for="{{ filter.form.gender.id_for_label }}">Płeć:</label><br>
+                        {{ filter.form.gender }}
+                    </div>
+
+                    <div class="filter-box">
+                        <label for="{{ filter.form.ordering.id_for_label }}">Sortuj według:</label><br>
+                        {{ filter.form.ordering }}
+                    </div>
+                    <div class="submit_button">
+                        <button type="submit">Zastosuj</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div class ="center_section">
+            {% for animal in animals %}
+            <a href="{% url 'animal_detail' animal.id %}" class="product_card_link">
+                <div id="animal-{{ animal.id }}" class="product_card">
+                    <div class="product_minature">
+                        <img src="{{ animal.image.url }}" alt="{{ animal.title }}">
+                    </div>
+                    <div class="product">
+                        <div class="product_description">
+                            <h3>{{ animal.title }}</h3>
+                            <h4>{{ animal.category }}</h4>
+                            <p>{{ animal.description }}</p>
+                        </div>
+                        <div class="product_info">
+                            <h3>
+                                Waga: {{ animal.weight }}kg
+                                <span style="margin-left: 20px;">Płeć: {{ animal.gender }}</span>
+                            </h3>
+                    </div>
+                    </div>
+
+                </div>
+            </a>
+
+        {% empty %}
+            <p>No cats available right now :(</p>
+
+        {% endfor %}
+
+        </div>
+        <div class ="right_section">
+
+        </div>
+    </div>
+{% endblock %}
