@@ -25,9 +25,7 @@
                 <a href="{% url 'home' %}" class="nav_button">Powrót do terminarza</a>
             {% endif %}
             {% if request.resolver_match.url_name != 'appointment_history' %}
-                <a href="">
-                    <div class="nav_button">Historia wizyt</div>
-                </a>
+                <a href="{% url 'appointment_history' %}" class="nav_button">Historia wizyt</a>
             {% endif %}
 
 

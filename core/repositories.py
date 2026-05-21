@@ -28,6 +28,16 @@ class AnimalRepository(BaseRepository[Animal]):
     def __init__(self):
         super().__init__(Animal)
 
+class AppointmentRepository(BaseRepository[Appointment]):
+    def __init__(self):
+        super().__init__(Appointment)
+
+    def get_user_appointment_history(self, user):
+        return Appointment.objects.filter(
+            user = user,
+            status__in=['D','X','N']
+            )
+
 class CategoryRepository(BaseRepository[Category]):
     def __init__(self):
         super().__init__(Category)

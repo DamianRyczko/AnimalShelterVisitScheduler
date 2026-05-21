@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .decorators import allowed_roles
-from .services import animal_service, term_service
-from .filters import AnimalFilter, TermFilter
+from .services import animal_service, appointment_service, term_service
+from .filters import AnimalFilter, AppointmentFilter, TermFilter
 from .forms import AnimalForm
 
 
@@ -18,6 +18,19 @@ def home(request):
     }
 
     return render(request, 'client/index.html', context)
+
+#---------------------------- CLIENT ---------------------------
+@allowed_roles(allowed_groups=['Customers'])
+def history(request):
+    user = request.user.profile
+    base_appointments = appointment_service.get_user_appointment_history(user)
+    filtered_appointments = AppointmentFilter(request.GET, queryset=base_appointments)
+
+    context = {
+        'filter': filtered_appointments,
+        'appointments': filtered_appointments.qs
+    }
+    return render(request, 'client/history.html', context)
 
 #---------------------------- EMPLOYEE ---------------------------
 #@allowed_roles(allowed_groups=['Employees', 'Admins'])
