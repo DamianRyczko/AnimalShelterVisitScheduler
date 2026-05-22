@@ -22,6 +22,16 @@ def home(request):
 #---------------------------- CLIENT ---------------------------
 @allowed_roles(allowed_groups=['Customers'])
 def history(request):
+    """
+    Renders the user's appointment history view (read-only). Being logged in is required.
+    This function retreives user's appointment history and filters it based on the user's choices in the filter form.
+
+    Args:
+        request: HTTP request of the user from "Customers" group.
+
+    Returns:
+        HttpResponse: Rendered "client/history.html" template containing filter form and list of user's inactive appointments.  
+    """
     user = request.user.profile
     base_appointments = appointment_service.get_user_appointment_history(user)
     filtered_appointments = AppointmentFilter(request.GET, queryset=base_appointments)

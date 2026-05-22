@@ -37,7 +37,7 @@ class AppointmentService(BaseService[Appointment]):
     def get_user_appointment_history(self, user):
         return self.repository.get_user_appointment_history(user)
     
-appointment_service = AppointmentService()
+appointment_service = AppointmentService() #module Singleton
 
 class CategoryService(BaseService[Category]):
     def __init__(self) -> None:
