@@ -3,37 +3,69 @@
 
 {% block css %}
     <link rel="stylesheet" href="{%  static 'css/client/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/client/index_styles.css' %}">
 {% endblock %}
 
 {% block content %}
-<h1> Historia spotkań </h1>
+    <div class = "main_product_container">
+        <div class ="left_section">
+            <div class="filter_form_box">
+                <form method="get">
+                    <div class="filter-box">
+                        <label for="{{ filter.form.title.id_for_label }}">Szukaj zwierzaka:</label><br>
+                        {{ filter.form.animal }}
+                    </div>
 
-<div class="filter-section" style="margin-bottom: 30px; padding: 15px; background: #f9f9f9; border-radius: 8px;">
-    <form method="GET" action="">
-        <div class="filter-form-fields">
-            {{ filter.form.as_p }}
-        </div>
-        <button type="submit" class="btn-filter" style="padding: 8px 15px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
-            Filtruj wyniki
-        </button>
-        <a href="{% url 'appointment_history' %}" class="btn-clear" style="margin-left: 10px; color: #666; text-decoration: none;">
-            Wyczyść filtry
-        </a>
-    </form>
-</div>
+                    <div class="filter-box">
+                        <label for="{{ filter.form.category.id_for_label }}">Status:</label><br>
+                        {{ filter.form.status }}
+                    </div>
+                    <div class="filter-box">
+                        <label for="{{ filter.form.gender.id_for_label }}">Data od:</label><br>
+                        {{ filter.form.start_date }}
+                    </div>
 
-<div class="column">
-    {% for item in appointments %}
-        <div class="appointment-card disabled-card" style="opacity: 0.65; background-color: #f5f5f5; pointer-events: none;">
-            <p><strong>Zwierzę:</strong> {{ item.term.animal.name }}</p>
-            
-            <p><strong>Data wizyty:</strong> {{ item.term.start_date }} do {{ item.term.end_date }}</p>
-            
-            <p><strong>Status:</strong> {{ item.get_status_display }}</p>
+                    <div class="filter-box">
+                        <label for="{{ filter.form.ordering.id_for_label }}">Data do:</label><br>
+                        {{ filter.form.end_date }}
+                    </div>
+                    <div class="submit_button">
+                        <button type="submit">Zastosuj</button>
+                    </div>
+
+                </form>
+            </div>
         </div>
-        <hr>
-    {% empty %}
-        <p>Nie masz jeszcze żadnej historii spotkań naszym schronisku.</p>
-    {% endfor %}
-</div>
+        <div class ="center_section">
+            <h1 class = "title_card">
+                HISTORIA SPOTKAŃ
+            </h1>
+            {% for appointment in appointments %}
+            <a href="{% url 'animal_detail' appointment.term.animal.id %}" class="product_card_link">
+                <div id="animal-{{ appointment.term.animal.id }}" class="product_card">
+                    <div class="product_minature">
+                        <img src="{{ appointment.term.animal.image.url }}" alt="{{ appointment.term.animal.title }}">
+                    </div>
+                    <div class="product">
+                        <div class="product_description">
+                            <h2>{{ appointment.term.animal.name }}</h2>
+                            <h4>Termin: {{ appointment.term.start_date|date:"j F Y" }} - {{ appointment.term.end_date|date:"j F Y" }}</h4>
+                        </div>
+                        <div class="product_info">
+                            <h3>
+                                Status: {{appointment.get_status_display}}
+                            </h3>
+                            <h6>
+                                <span style="margin-left: 750px;">Utworzono: {{ appointment.created_at|date:"j F Y H:m" }}</span>    
+                            </h6>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+            {% empty %}
+            <p>Nie masz jeszcze żadnej historii spotkań naszym schronisku.</p>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

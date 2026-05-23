@@ -53,7 +53,7 @@ class AppointmentFilter(django_filters.FilterSet):
     )
     
     end_date = django_filters.DateFilter(
-        field_name='term__start_date',
+        field_name='term__end_date',
         lookup_expr='lte',
         label='Data do',
         widget=forms.DateInput(attrs={'type': 'date', 'class': 'date-input'})
