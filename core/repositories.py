@@ -20,6 +20,10 @@ class BaseRepository(Generic[T]):
         deleted_count, _ = self.model.objects.filter(pk=pk).delete()
         return deleted_count > 0
 
+    def delete_soft(self, pk:int) -> bool:
+        updated_count = self.model.objects.filter(pk=pk, is_active=True).update(is_active=False)
+        return updated_count > 0
+
     def save(self, instance: T) -> T:
         instance.save()
         return instance

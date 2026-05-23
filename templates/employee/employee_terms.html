@@ -1,0 +1,57 @@
+{% extends 'employee/base_employee.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/employee/employee_product_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/employee/style_employee.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="main_container">
+    <h1>Panel Terminów</h1>
+        <div class ="item_section">
+            {% for term in terms %}
+             <div class="item_card">
+                <div class="item_miniature">
+                    <img src="{{ term.animal.image.url }}" alt="{{ term.animal.name }}">
+                </div>
+                <div class="item_info">
+                    <h2>{{ term.animal.name }}</h2>
+                    <div class="description_box"> </div>
+                    <h4>Data: {{ term.start_date|date:"j F Y" }} do {{ term.end_date|date:"j F Y" }}</h4>
+
+                    {% if not term.is_past %}
+                        {% if term.status %}
+                            <h4>Status: Wolny</h4>
+                        {% else %}
+                            <h4>Status: Zajęty</h4>
+                        {% endif %}
+                        <div class="button_box">
+                            <a href="{% url 'edit_term' term.id %}">
+                                <button class="function_button">Edytuj</button>
+                            </a>
+                            <form action="{% url 'delete_term' term.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="function_button">
+                                    Usuń
+                                </button>
+                            </form>
+                        </div>
+
+                    {% else %}
+                        <h4> TERMIN ARCHIWALNY</h4>
+
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+                <p>No terms available right now :(</p>
+            {% endfor %}
+        <a href="{% url 'add_term' %}">
+            <div class="add_card">
+                <h2>+</h2>
+            </div>
+        </a>
+        </div>
+    </div>
+{% endblock %}

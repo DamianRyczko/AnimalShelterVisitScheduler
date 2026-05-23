@@ -19,6 +19,9 @@ class BaseService(Generic[T]):
 
     def delete(self, pk: int) -> bool:
         return self.repository.delete(pk)
+    
+    def delete_soft(self, pk: int) -> bool:
+        return self.repository.delete_soft(pk)
 
     def save(self, instance: T) -> T:
         return self.repository.save(instance)
