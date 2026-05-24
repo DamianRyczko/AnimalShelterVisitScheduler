@@ -37,6 +37,11 @@
                 <div class="nav_button">Terminy</div>
             </a>
             {% endif %}
+            {% if request.resolver_match.url_name != 'employee_appointments' %}
+            <a href="{% url 'employee_appointments' %}">
+                <div class="nav_button">Wizyty</div>
+            </a>
+            {% endif %}
         </div>
 
         <div class="user_panel">

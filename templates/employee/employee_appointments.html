@@ -1,0 +1,62 @@
+{% extends 'employee/base_employee.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/employee/employee_product_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/employee/style_employee.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="main_container">
+    <h1>Zarządzanie Wizytami</h1>
+
+    {% if messages %}
+        <div class="error_box">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="item_section">
+        {% for appointment in appointments %}
+        <div class="item_card">
+            <div class="item_miniature">
+            <img src="{{ appointment.term.animal.image.url }}" alt="{{ animal.name }}">
+            </div>
+            <div class="item_info">
+                <h2>Wizyta #{{ appointment.id }}</h3>
+                <h4><strong>Zwierzę:</strong> {{ appointment.term.animal.name }}</h4>
+                <h4><strong>Klient:</strong> {{ appointment.user.user.first_name }} {{ appointment.user.user.last_name }}</h4>
+                <h4><strong>Data:</strong> {{ appointment.term.start_date|date:"j F Y" }}</h4>
+                
+                <h4>
+                    <strong>Obecny status:</strong> 
+                    <span class="status-badge">{{ appointment.get_status_display }}</span>
+                </h4>
+                
+                <div class="status-actions" style="display: flex; gap: 10px; margin-top: 15px;">
+                    
+                    <form action="{% url 'update_appointment_status' appointment.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="status" value="C">
+                        <button type="submit" class="function_button" >Zaakceptuj</button>
+                    </form>
+
+                    <form action="{% url 'update_appointment_status' appointment.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="status" value="R">
+                        <button type="submit" class="function_button">Anuluj</button>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <p>Brak wizyt w systemie.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

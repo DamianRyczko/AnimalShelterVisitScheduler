@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from .decorators import allowed_roles
-from .services import animal_service, term_service
+from .services import animal_service, term_service, appointment_service
 from .filters import AnimalFilter, TermFilter
-from .forms import AnimalForm
+from .forms import AnimalForm, AppointmentStateForm
 
 
 #---------------------------- HOME ---------------------------
@@ -24,6 +25,15 @@ def home(request):
 def employee_animals(request):
     animals = animal_service.get_all()
     return render(request, 'employee/employee_animals.html', {'animals': animals})
+
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
+def employee_appointments(request):
+    appointments = appointment_service.get_all()
+
+    context = {
+        'appointments': appointments
+    }
+    return render(request, 'employee/employee_appointments.html', context)
 
 
 def animal_detail(request, animal_id):
@@ -52,6 +62,22 @@ def manage_animal(request, pk = None):
     else:
         form = AnimalForm(instance=animal)
     return render(request, 'employee/animals_add.html', {'form': form})
+
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
+def manage_appointment_status(request, pk):
+    if request.method == 'POST':
+        appointment = appointment_service.get_by_id(pk=pk)
+        
+        # Przekazujemy request.POST i instancję, by zaktualizować konkretny rekord
+        form = AppointmentStateForm(request.POST, instance=appointment)
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Status wizyty #{appointment.id} został zaktualizowany.")
+        else:
+            messages.error(request, "Wystąpił błąd podczas zmiany statusu.")
+            
+    return redirect('employee_appointments')
 
 #@allowed_roles(allowed_groups=['Employees', 'Admins'])
 def delete_animal(request, pk):

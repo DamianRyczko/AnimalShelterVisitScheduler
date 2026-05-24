@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from .models import Animal, Category,GenderChoices
+from .models import Animal, Category,GenderChoices, Appointment, AppointmentStatusChoices
 from .validators import validate_admission_after_birth, validate_not_future
 
 class AnimalForm(forms.ModelForm):
@@ -55,3 +55,15 @@ class AnimalForm(forms.ModelForm):
             self.add_error('admission_date', e)
 
         return cleaned_data
+    
+class AppointmentStateForm(forms.ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ['status']
+        
+    def clean_status(self):
+        status = self.cleaned_data.get('status')
+        allowed_states = [choice[0] for choice in AppointmentStatusChoices.choices]
+        if status not in allowed_states:
+            raise ValidationError("Wybrano niedozwolony status wizyty.")
+        return status

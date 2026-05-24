@@ -16,7 +16,7 @@ class AuthService(IAuthService):
         if self.repo.user_has_group(user, 'Admins'):
             return "admin:index"
         elif self.repo.user_has_group(user, 'Employees'):
-            return "employee_products"
+            return "employee_animals"
         else:
             return "home"
 
