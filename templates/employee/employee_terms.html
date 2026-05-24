@@ -7,8 +7,34 @@
 {% endblock %}
 
 {% block content %}
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="error_box">
+            {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
     <div class="main_container">
     <h1>Panel Terminów</h1>
+        <div class="employee-filter-bar" style="background-color: rgba(153, 153, 153, 0.4); padding: 20px; border-radius: 15px;" >
+            <form method="get" style="display: flex; gap: 30px; flex-wrap: wrap; align-items: flex-end;">
+                {% for field in filter.form %}
+                    <div class="filter-box" style="display: flex; flex-direction: column;">
+                        <label for="{{ field.id_for_label }}" style="font-weight: bold; margin-bottom: 5px; font-size: 14px;">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                
+                <div class="button-box">
+                    <button type="submit" class="function_button">Filtruj</button>
+                </div>
+                
+            </form>
+        </div>
         <div class ="item_section">
             {% for term in terms %}
              <div class="item_card">

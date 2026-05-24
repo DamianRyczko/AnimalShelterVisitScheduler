@@ -3,7 +3,7 @@ from django.utils import timezone
 
 #---------------------------- Date ---------------------------
 def validate_not_future(value, field_label="Data"):
-    if value and value > timezone.localdate().isoformat():
+    if value and value > timezone.localdate():
         raise ValidationError(f"{field_label} nie może być w przyszłości.")
 
 def validate_not_past(value, field_label="Data"):

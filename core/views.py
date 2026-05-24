@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from .decorators import allowed_roles
 from .services import animal_service, term_service
-from .filters import AnimalFilter, TermFilter
+from .filters import AnimalFilter, TermFilter, TermFilterEmployee
 from .forms import AnimalForm, TermForm
 
 
@@ -27,8 +28,15 @@ def employee_animals(request):
 
 @allowed_roles(allowed_groups=['Employees', 'Admins'])
 def employee_terms(request):
-    terms = term_service.get_all()    
-    return render(request, 'employee/employee_terms.html', {'terms': terms})
+    terms = term_service.get_all_including_inactive()  
+    term_filter = TermFilterEmployee(request.GET, queryset=terms)
+    
+    context = {
+        'filter': term_filter,
+        'terms': term_filter.qs
+        }
+    
+    return render(request, 'employee/employee_terms.html', context)
 
 
 def animal_detail(request, animal_id):
@@ -61,12 +69,23 @@ def manage_animal(request, pk = None):
 @allowed_roles(allowed_groups=['Employees', 'Admins'])
 def manage_term(request, pk=None):
     term = term_service.get_by_id(pk) if pk else None
+
+    if term and term.is_past():
+        messages.error(request, "Nie możesz edytować terminu z przeszłości.")
+        return redirect('employee_terms')
+    
     if request.method == 'POST':
         form = TermForm(request.POST, instance=term)
         if form.is_valid():
             term_obj = form.save(commit=False)
             term_service.save(term_obj)
             form.save_m2m()
+
+            if pk:
+                messages.success(request, 'Termin został pomyślnie zaktualizowany.')
+            else:
+                messages.success(request, 'Nowy termin został pomyślnie dodany.')
+
             return redirect('employee_terms')
     else:
         form = TermForm(instance=term)
@@ -81,5 +100,10 @@ def delete_animal(request, pk):
 @allowed_roles(allowed_groups=['Employees', 'Admins'])
 def delete_term(request, pk):
     if request.method == 'POST':
-        term_service.delete_soft(pk)
+        term = term_service.get_by_id(pk)
+        if term.is_past():
+            messages.error(request, "Nie możesz usunąć terminu z przeszłości.")
+        else:
+            term_service.delete_soft(pk)
+            messages.success(request, "Termin usunięty pomyślnie.")
     return redirect('employee_terms')

@@ -13,6 +13,9 @@ class BaseService(Generic[T]):
 
     def get_all(self) -> QuerySet[T]:
         return self.repository.get_all_active()
+    
+    def get_all_including_inactive(self) -> QuerySet[T]:
+        return self.repository.get_all()
 
     def get_by_id(self, pk: int) -> T:
         return self.repository.get_by_id(pk)
