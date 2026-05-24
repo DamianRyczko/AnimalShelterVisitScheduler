@@ -28,6 +28,16 @@ def employee_animals(request):
 
 @allowed_roles(allowed_groups=['Employees', 'Admins'])
 def employee_terms(request):
+    """
+    Renders the employee's view for managing terms. Past terms are read-only.
+    User may filter the terms list based on start/end date, animal it's connected to or is_active status.
+
+    Args:
+        request: HTTP request of the user from "Employees" or "Admins" group.
+
+    Returns:
+        HttpResponse: Rendered "employee/employee_terms.html" template containing filter form and list of all terms in database. 
+    """
     terms = term_service.get_all_including_inactive()  
     term_filter = TermFilterEmployee(request.GET, queryset=terms)
     
@@ -68,6 +78,16 @@ def manage_animal(request, pk = None):
 
 @allowed_roles(allowed_groups=['Employees', 'Admins'])
 def manage_term(request, pk=None):
+    """
+    Allows to add a new term or edit the exited one. You can only add or edit future term.
+
+    Args:
+        request: HTTP request of the user from "Employees" or "Admins" group.
+        pk: primary key of the term to edit (optional)
+    
+    Returns:
+        HttpResponseRedirect: Redirects to the "employee/employee_terms.html" template containing filter form and list of all terms in database. 
+    """
     term = term_service.get_by_id(pk) if pk else None
 
     if term and term.is_past():
@@ -99,6 +119,16 @@ def delete_animal(request, pk):
 
 @allowed_roles(allowed_groups=['Employees', 'Admins'])
 def delete_term(request, pk):
+    """
+    Deletes the term from database via soft delete operation. Deleted term mustn't be from the past.
+
+    Args:
+        request: HTTP request of the user from "Employees" or "Admins" group.
+        pk: primary key of the term to delete
+    
+    Returns:
+        HttpResponseRedirect: Redirects to the "employee/employee_terms.html" template containing filter form and list of all terms in database. 
+    """
     if request.method == 'POST':
         term = term_service.get_by_id(pk)
         if term.is_past():
