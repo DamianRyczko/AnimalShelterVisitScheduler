@@ -2,13 +2,25 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .decorators import allowed_roles
 from .services import animal_service, appointment_service, term_service
-from .filters import AnimalFilter, AppointmentFilter, TermFilter
-from .forms import AnimalForm
+from .filters import AnimalFilter, AppointmentFilter, TermFilter, TermFilterEmployee
+from .forms import AnimalForm, TermForm
 
 
 #---------------------------- HOME ---------------------------
 def home(request):
+    """
+    Renders the home/index page for clients.
 
+    Fetches all active animals using the animal service and applies the 
+    AnimalFilter based on the user's GET request parameters.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: Rendered 'client/index.html' template containing the 
+            filter form and the filtered list of animals.
+    """
     animal_queryset = animal_service.get_all()
 
     animal_filter = AnimalFilter(request.GET, queryset=animal_queryset)
@@ -46,6 +58,19 @@ def history(request):
 #---------------------------- EMPLOYEE ---------------------------
 #@allowed_roles(allowed_groups=['Employees', 'Admins'])
 def employee_animals(request):
+    """
+    Renders the employee's view for managing animals.
+
+    Retrieves a list of all active animals from the database to display 
+    on the employee management panel.
+
+    Args:
+        request (HttpRequest): HTTP request of the user from "Employees" or "Admins" group.
+
+    Returns:
+        HttpResponse: Rendered 'employee/employee_animals.html' template containing 
+            the list of animals.
+    """
     animals = animal_service.get_all()
     return render(request, 'employee/employee_animals.html', {'animals': animals})
 
@@ -73,6 +98,20 @@ def employee_terms(request):
 
 
 def animal_detail(request, animal_id):
+    """
+    Displays the detailed view of a specific animal and its available terms.
+
+    Fetches the animal object by its ID and retrieves all terms associated 
+    with it. Allows the user to filter the animal's terms using the TermFilter.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+        animal_id (int): The unique identifier of the animal.
+
+    Returns:
+        HttpResponse: Rendered 'client/animal_detail.html' template containing 
+            animal details, term filter form, and the filtered list of terms.
+    """
     animal = animal_service.get_by_id(animal_id)
 
     term_queryset = term_service.get_all_for_animal(animal)
@@ -87,6 +126,21 @@ def animal_detail(request, animal_id):
 
 #@allowed_roles(allowed_groups=['Employees', 'Admins'])
 def manage_animal(request, pk = None):
+    """
+    Handles the creation of a new animal or the modification of an existing one.
+
+    Processes both GET (displaying the form) and POST (saving data) requests. 
+    It supports file uploads through request.FILES and handles many-to-many 
+    relationships if necessary.
+
+    Args:
+        request (HttpRequest): HTTP request of the user from "Employees" or "Admins" group.
+        pk (int, optional): Primary key of the animal to edit. Defaults to None for creating a new animal.
+
+    Returns:
+        HttpResponseRedirect: Redirects to the 'employee_animals' view upon successful save.
+        HttpResponse: Rendered 'employee/animals_add.html' template with the form otherwise.
+    """
     animal = animal_service.get_by_id(pk) if pk else None
     if request.method == 'POST':
         form = AnimalForm(request.POST, request.FILES, instance=animal)
@@ -136,6 +190,20 @@ def manage_term(request, pk=None):
 
 #@allowed_roles(allowed_groups=['Employees', 'Admins'])
 def delete_animal(request, pk):
+    """
+    Performs a SOFT delete operation on a specific animal.
+
+    Processes POST requests to safely remove an animal from public/employee 
+    listings by changing its is_active status rather than permanently deleting 
+    it from the database.
+
+    Args:
+        request (HttpRequest): HTTP request of the user from "Employees" or "Admins" group.
+        pk (int): Primary key of the animal to be soft-deleted.
+
+    Returns:
+        HttpResponseRedirect: Redirects to the 'employee_animals' view after deletion.
+    """
     if request.method == 'POST':
         animal_service.delete_soft(pk)
     return redirect('employee_animals')
