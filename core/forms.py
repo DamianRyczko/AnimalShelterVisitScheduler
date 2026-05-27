@@ -57,11 +57,30 @@ class AnimalForm(forms.ModelForm):
         return cleaned_data
     
 class AppointmentStateForm(forms.ModelForm):
+    """A ModelForm for updating the state of an appointment.
+
+    Only 'status' field of the instance 'Appointment" can be modified. 
+    It prevents unauthorized changes to other appointment details (like 
+    date, user, or animal) by exposing only the state field.
+    """
     class Meta:
         model = Appointment
         fields = ['status']
         
     def clean_status(self):
+        """Validates the submitted status value.
+
+        Retrieves the submitted status and checks if it exists within the 
+        predefined valid choices (`AppointmentStatusChoices`). This ensures 
+        that no invalid state strings can be saved to the database.
+
+        Returns:
+            str: The validated and cleaned status code
+
+        Raises:
+            ValidationError: If the submitted status is not found in the 
+                allowed `AppointmentStatusChoices`.
+        """
         status = self.cleaned_data.get('status')
         allowed_states = [choice[0] for choice in AppointmentStatusChoices.choices]
         if status not in allowed_states:

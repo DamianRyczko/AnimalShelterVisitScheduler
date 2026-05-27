@@ -32,26 +32,43 @@
                 <h4><strong>Klient:</strong> {{ appointment.user.user.first_name }} {{ appointment.user.user.last_name }}</h4>
                 <h4><strong>Data:</strong> {{ appointment.term.start_date|date:"j F Y" }}</h4>
                 
-                <h4>
-                    <strong>Obecny status:</strong> 
-                    <span class="status-badge">{{ appointment.get_status_display }}</span>
-                </h4>
-                
-                <div class="status-actions" style="display: flex; gap: 10px; margin-top: 15px;">
+                {% if edit_id == appointment.id %}
                     
-                    <form action="{% url 'update_appointment_status' appointment.id %}" method="POST">
+                    <form action="{% url 'update_appointment_status' appointment.id %}" method="POST" style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
                         {% csrf_token %}
-                        <input type="hidden" name="status" value="C">
-                        <button type="submit" class="function_button" >Zaakceptuj</button>
+                        
+                        <label><strong>Status:</strong></label>
+                        <select name="status" class="form-control" style="padding: 5px; border-radius: 5px;">
+                            <option value="P" {% if appointment.status == 'P' %}selected{% endif %}>Oczekująca (Received)</option>
+                            <option value="C" {% if appointment.status == 'C' %}selected{% endif %}>Potwierdzona (Confirmed)</option>
+                            <option value="R" {% if appointment.status == 'R' %}selected{% endif %}>Odrzucona (Rejected)</option>
+                            <option value="D" {% if appointment.status == 'D' %}selected{% endif %}>Zrealizowana (Completed)</option>
+                            <option value="X" {% if appointment.status == 'X' %}selected{% endif %}>Anulowana (Cancelled)</option> 
+                            <option value="N" {% if appointment.status == 'N' %}selected{% endif %}>Nieobecny (No Show)</option>
+                        </select>
+
+                        <button type="submit" class="function_button">
+                            Potwierdź
+                        </button>
+                        
+                        <a href="{% url 'employee_appointments' %}" class="function_button">
+                            Anuluj
+                        </a>
                     </form>
 
-                    <form action="{% url 'update_appointment_status' appointment.id %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="status" value="R">
-                        <button type="submit" class="function_button">Anuluj</button>
-                    </form>
+                {% else %}
+
+                    <h4>
+                        <strong>Obecny status:</strong> 
+                        <span class="status-badge" style="font-weight: bold;">
+                            {{ appointment.get_status_display }}
+                        </span>
+                    </h4>
                     
-                </div>
+                    <a href="?edit={{ appointment.id }}" class="function_button">
+                        Zmień status
+                    </a>
+                {% endif %}
             </div>
         </div>
         {% empty %}

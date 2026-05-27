@@ -28,10 +28,32 @@ def employee_animals(request):
 
 @allowed_roles(allowed_groups=['Employees', 'Admins'])
 def employee_appointments(request):
-    appointments = appointment_service.get_all()
+    """Renders the appointment management page for employees.
 
+    Fetches all customer appointments using the appointment service and checks 
+    the URL for an 'edit' query parameter. If a valid numeric ID is provided, 
+    it is passed to the context to enable inline editing mode for that specific 
+    appointment in the template.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request object containing 
+            potential GET parameters.
+
+    Returns:
+        HttpResponse: The rendered 'employee/employee_appointments.html' 
+            template populated with the appointments list and the active edit ID.
+    """
+    appointments = appointment_service.get_all()
+    
+    edit_id = request.GET.get('edit')
+    if edit_id and edit_id.isdigit():
+        edit_id = int(edit_id)
+    else:
+        edit_id = None
+    
     context = {
-        'appointments': appointments
+        'appointments': appointments,
+        'edit_id': edit_id 
     }
     return render(request, 'employee/employee_appointments.html', context)
 
@@ -65,10 +87,24 @@ def manage_animal(request, pk = None):
 
 @allowed_roles(allowed_groups=['Employees', 'Admins'])
 def manage_appointment_status(request, pk):
+    """Handles the status update for a specific customer appointment.
+
+    Processes POST requests to modify the state of an existing appointment 
+    using the `AppointmentStateForm`. It fetches the appointment by its 
+    primary key, validates the new status, updates the database, and adds 
+    an appropriate success or error flash message. Non-POST requests are 
+    ignored, and the view always redirects back to the appointments list.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request object.
+        pk (int): The primary key (ID) of the appointment to be updated.
+
+    Returns:
+        HttpResponseRedirect: A redirection to the 'employee_appointments' 
+            view, regardless of the request method or validation outcome.
+    """
     if request.method == 'POST':
         appointment = appointment_service.get_by_id(pk=pk)
-        
-        # Przekazujemy request.POST i instancję, by zaktualizować konkretny rekord
         form = AppointmentStateForm(request.POST, instance=appointment)
         
         if form.is_valid():
