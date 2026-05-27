@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from .decorators import allowed_roles
-from .services import animal_service, term_service
-from .filters import AnimalFilter, TermFilter
+from .services import animal_service, appointment_service, term_service
+from .filters import AnimalFilter, AppointmentFilter, TermFilter
 from .forms import AnimalForm
 
 
@@ -19,11 +20,56 @@ def home(request):
 
     return render(request, 'client/index.html', context)
 
+#---------------------------- CLIENT ---------------------------
+@allowed_roles(allowed_groups=['Customers'])
+def history(request):
+    """
+    Renders the user's appointment history view (read-only). Being logged in is required.
+    This function retreives user's appointment history and filters it based on the user's choices in the filter form.
+
+    Args:
+        request: HTTP request of the user from "Customers" group.
+
+    Returns:
+        HttpResponse: Rendered "client/history.html" template containing filter form and list of user's inactive appointments.  
+    """
+    user = request.user.profile
+    base_appointments = appointment_service.get_user_appointment_history(user)
+    filtered_appointments = AppointmentFilter(request.GET, queryset=base_appointments)
+
+    context = {
+        'filter': filtered_appointments,
+        'appointments': filtered_appointments.qs
+    }
+    return render(request, 'client/history.html', context)
+
 #---------------------------- EMPLOYEE ---------------------------
 #@allowed_roles(allowed_groups=['Employees', 'Admins'])
 def employee_animals(request):
     animals = animal_service.get_all()
     return render(request, 'employee/employee_animals.html', {'animals': animals})
+
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
+def employee_terms(request):
+    """
+    Renders the employee's view for managing terms. Past terms are read-only.
+    User may filter the terms list based on start/end date, animal it's connected to or is_active status.
+
+    Args:
+        request: HTTP request of the user from "Employees" or "Admins" group.
+
+    Returns:
+        HttpResponse: Rendered "employee/employee_terms.html" template containing filter form and list of all terms in database. 
+    """
+    terms = term_service.get_all_including_inactive()  
+    term_filter = TermFilterEmployee(request.GET, queryset=terms)
+    
+    context = {
+        'filter': term_filter,
+        'terms': term_filter.qs
+        }
+    
+    return render(request, 'employee/employee_terms.html', context)
 
 
 def animal_detail(request, animal_id):
@@ -53,8 +99,64 @@ def manage_animal(request, pk = None):
         form = AnimalForm(instance=animal)
     return render(request, 'employee/animals_add.html', {'form': form})
 
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
+def manage_term(request, pk=None):
+    """
+    Allows to add a new term or edit the exited one. You can only add or edit future term.
+
+    Args:
+        request: HTTP request of the user from "Employees" or "Admins" group.
+        pk: primary key of the term to edit (optional)
+    
+    Returns:
+        HttpResponseRedirect: Redirects to the "employee/employee_terms.html" template containing filter form and list of all terms in database. 
+    """
+    term = term_service.get_by_id(pk) if pk else None
+
+    if term and term.is_past():
+        messages.error(request, "Nie możesz edytować terminu z przeszłości.")
+        return redirect('employee_terms')
+    
+    if request.method == 'POST':
+        form = TermForm(request.POST, instance=term)
+        if form.is_valid():
+            term_obj = form.save(commit=False)
+            term_service.save(term_obj)
+            form.save_m2m()
+
+            if pk:
+                messages.success(request, 'Termin został pomyślnie zaktualizowany.')
+            else:
+                messages.success(request, 'Nowy termin został pomyślnie dodany.')
+
+            return redirect('employee_terms')
+    else:
+        form = TermForm(instance=term)
+    return render(request, 'employee/term_add.html', {'form': form})
+
 #@allowed_roles(allowed_groups=['Employees', 'Admins'])
 def delete_animal(request, pk):
     if request.method == 'POST':
-        animal_service.delete(pk)
+        animal_service.delete_soft(pk)
     return redirect('employee_animals')
+
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
+def delete_term(request, pk):
+    """
+    Deletes the term from database via soft delete operation. Deleted term mustn't be from the past.
+
+    Args:
+        request: HTTP request of the user from "Employees" or "Admins" group.
+        pk: primary key of the term to delete
+    
+    Returns:
+        HttpResponseRedirect: Redirects to the "employee/employee_terms.html" template containing filter form and list of all terms in database. 
+    """
+    if request.method == 'POST':
+        term = term_service.get_by_id(pk)
+        if term.is_past():
+            messages.error(request, "Nie możesz usunąć terminu z przeszłości.")
+        else:
+            term_service.delete_soft(pk)
+            messages.success(request, "Termin usunięty pomyślnie.")
+    return redirect('employee_terms')
