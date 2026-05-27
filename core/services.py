@@ -13,12 +13,18 @@ class BaseService(Generic[T]):
 
     def get_all(self) -> QuerySet[T]:
         return self.repository.get_all_active()
+    
+    def get_all_including_inactive(self) -> QuerySet[T]:
+        return self.repository.get_all()
 
     def get_by_id(self, pk: int) -> T:
         return self.repository.get_by_id(pk)
 
     def delete(self, pk: int) -> bool:
         return self.repository.delete(pk)
+    
+    def delete_soft(self, pk: int) -> bool:
+        return self.repository.delete_soft(pk)
 
     def save(self, instance: T) -> T:
         return self.repository.save(instance)

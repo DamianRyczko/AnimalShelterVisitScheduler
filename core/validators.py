@@ -3,9 +3,13 @@ from django.utils import timezone
 
 #---------------------------- Date ---------------------------
 def validate_not_future(value, field_label="Data"):
-    if value and value > timezone.localdate().isoformat():
+    if value and value > timezone.localdate():
         raise ValidationError(f"{field_label} nie może być w przyszłości.")
 
-def validate_admission_after_birth(birth_date, admission_date):
-    if birth_date and admission_date and admission_date < birth_date:
-        raise ValidationError("Data przyjęcia do schroniska nie może być wcześniejsza niż data urodzin.")
+def validate_not_past(value, field_label="Data"):
+    if value and value < timezone.localdate():
+        raise ValidationError(f"{field_label} nie może być w przeszłości")
+    
+def validate_A_not_after_B(date_A, date_B, label_A = "Data A", label_B = "Data B"):
+    if date_A and date_B and date_B < date_A:
+        raise ValidationError(f"{label_A} nie może być późniejsza od {label_B}")

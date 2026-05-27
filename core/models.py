@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 class Profile(models.Model):
     # Link to the built-in Django User
@@ -51,6 +52,10 @@ class Term(models.Model):
     end_date = models.DateField()
     status = models.BooleanField(default=True) #free = 1 / taken = 0
     animal = models.ForeignKey(Animal, on_delete=models.PROTECT)
+    is_active = models.BooleanField(default=True)
+
+    def is_past(self):
+        return self.start_date < timezone.now().date()
 
     #Prevent start_date after end_date
     class Meta:
