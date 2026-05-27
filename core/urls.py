@@ -11,4 +11,5 @@ urlpatterns = [
     path('term/add/', views.manage_term, name='add_term'),
     path('term/edit/<int:pk>/', views.manage_term, name='edit_term'),
     path('term/delete/<int:pk>/', views.delete_term, name='delete_term')
+    path('history/', views.history, name='appointment_history'),
 ]
