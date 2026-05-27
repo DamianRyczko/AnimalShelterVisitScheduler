@@ -1,7 +1,7 @@
 from django.db.models import QuerySet
 
-from .models import Animal, Category, Term
-from .repositories import AnimalRepository, CategoryRepository, BaseRepository, TermRepository
+from .models import Animal, Appointment, Category, Term
+from .repositories import AnimalRepository, AppointmentRepository, CategoryRepository, BaseRepository, TermRepository
 from typing import Generic, TypeVar
 
 T = TypeVar("T")
@@ -30,6 +30,14 @@ class AnimalService(BaseService[Animal]):
 
 animal_service = AnimalService() #module Singleton
 
+class AppointmentService(BaseService[Appointment]):
+    def __init__(self) -> None:
+        super().__init__(AppointmentRepository())
+
+    def get_user_appointment_history(self, user):
+        return self.repository.get_user_appointment_history(user)
+    
+appointment_service = AppointmentService() #module Singleton
 
 class CategoryService(BaseService[Category]):
     def __init__(self) -> None:
