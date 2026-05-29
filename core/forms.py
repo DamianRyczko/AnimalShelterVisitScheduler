@@ -5,6 +5,13 @@ from .models import Animal, Term, Category, GenderChoices
 from .validators import validate_not_future, validate_not_past, validate_A_not_after_B
 
 class AnimalForm(forms.ModelForm):
+    """
+    A ModelForm for creating and updating Animal records.
+
+    Handles the input for animal details, including image uploads. It automatically
+    limits the category choices to active categories and restricts the UI to 
+    prevent selecting future dates for admission and birth.
+    """
     class Meta:
         model = Animal
         fields = [
@@ -23,6 +30,17 @@ class AnimalForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        """
+        Initializes the form, setting dynamic attributes and querysets.
+
+        Filters the `category` dropdown to show only active categories, sets HTML5 
+        'max' attributes on date fields to prevent future date selection in the UI, 
+        and appends the 'form-control' CSS class to all widgets.
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.filter(is_active=True)
 
@@ -35,6 +53,20 @@ class AnimalForm(forms.ModelForm):
             field.widget.attrs['class'] = (css + ' form-control').strip()
 
     def clean(self):
+        """
+        Validates the cleaned data for the animal form.
+
+        Ensures that neither the birth date nor the admission date is in the future.
+        Additionally, it verifies that the birth date logically precedes or equals 
+        the admission date.
+
+        Returns:
+            dict: The validated and cleaned data dictionary.
+
+        Raises:
+            ValidationError: If any date validations fail, errors are attached 
+                to the respective fields.
+        """
         cleaned_data = super().clean()
         birth_date = cleaned_data.get('birth_date')
         admission_date = cleaned_data.get('admission_date')
@@ -67,6 +99,12 @@ class CategoryForm(forms.ModelForm):
         }
     
 class TermForm(forms.ModelForm):
+    """
+    A ModelForm for creating and updating appointment Terms.
+
+    Manages the availability slots for animals. It restricts the animal choices 
+    to active animals only and sets UI constraints to prevent selecting past dates.
+    """
     class Meta:
         model = Term
         fields = ['start_date', 'end_date', 'animal']
@@ -77,6 +115,17 @@ class TermForm(forms.ModelForm):
         }
     
     def __init__(self, *args, **kwargs):
+        """
+        Initializes the form, setting dynamic constraints and CSS classes.
+
+        Filters the `animal` dropdown to include only active animals. Sets HTML5 
+        'min' attributes on date fields to the current local date to prevent 
+        selecting past dates in the UI, and appends the 'form-control' CSS class.
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
         super().__init__(*args, **kwargs)
 
         today_str = timezone.localdate().isoformat()
@@ -89,6 +138,20 @@ class TermForm(forms.ModelForm):
             field.widget.attrs['class'] = (css + ' form-control').strip()
 
     def clean(self):
+        """
+        Validates the cleaned data for the term form.
+
+        Ensures that neither the start date nor the end date is in the past.
+        Additionally, checks that the start date occurs before or exactly on 
+        the end date.
+
+        Returns:
+            dict: The validated and cleaned data dictionary.
+
+        Raises:
+            ValidationError: If any date validations fail, errors are attached 
+                to the respective fields.
+        """
         cleaned_data = super().clean()
         start_date = cleaned_data.get('start_date')
         end_date = cleaned_data.get('end_date')

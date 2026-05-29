@@ -3,6 +3,12 @@ from django import forms
 from .models import Animal, AppointmentStatusChoices, Term, Appointment
 from .services import animal_service
 class AnimalFilter(django_filters.FilterSet):
+    """
+    A filter set for the Animal model.
+
+    Allows users to search for animals by title (partial match), filter by 
+    category and gender, and order the results by weight or birth date.
+    """
     title = django_filters.CharFilter(field_name='title', lookup_expr='icontains', label='Szukaj zwierzaka')
 
     ordering = django_filters.OrderingFilter(
@@ -18,6 +24,12 @@ class AnimalFilter(django_filters.FilterSet):
         fields = ['category', 'gender']
 
 class TermFilter(django_filters.FilterSet):
+    """
+    A base filter set for the Term model.
+
+    Provides basic filtering capabilities to find appointment terms that 
+    start on or after a specific date, and end on or before a specific date.
+    """
     start_date = django_filters.DateFilter(
         field_name='start_date',
         lookup_expr='gte',
@@ -36,6 +48,12 @@ class TermFilter(django_filters.FilterSet):
         fields = ['start_date', 'end_date']
 
 class TermFilterEmployee(TermFilter):
+    """
+    An extended Term filter set for employee management.
+
+    Inherits from `TermFilter` and adds the ability to filter terms by a 
+    specific animal and to hide inactive (soft-deleted or past) terms.
+    """
     animal = django_filters.ModelChoiceFilter(
         queryset=animal_service.get_all_including_inactive(),
         empty_label='Wszystkie zwierzęta',
@@ -49,6 +67,17 @@ class TermFilterEmployee(TermFilter):
     )
 
     def filter_active(self, queryset, name, value):
+        """Filters the queryset to include only active terms.
+
+        Args:
+            queryset (QuerySet): The initial queryset of terms.
+            name (str): The name of the field being filtered.
+            value (bool): The boolean value from the checkbox.
+
+        Returns:
+            QuerySet: A filtered queryset containing only active terms if 
+                `value` is True, otherwise returns the original queryset.
+        """
         if value is True:
             return queryset.filter(is_active=True)
         return queryset
@@ -56,6 +85,13 @@ class TermFilterEmployee(TermFilter):
     class Meta:
         fields = TermFilter.Meta.fields + ['animal', 'is_active']
 class AppointmentFilter(django_filters.FilterSet):
+    """
+    A filter set for the Appointment model.
+
+    Allows users to filter their appointment history by status, a specific 
+    date range (based on the associated term's start and end dates), and 
+    the specific animal involved.
+    """
     status = django_filters.ChoiceFilter(
         choices=[
             (AppointmentStatusChoices.COMPLETED, 'Completed'),
