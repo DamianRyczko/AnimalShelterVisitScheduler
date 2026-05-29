@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # ---------- 1. run tests against a real MySQL ----------
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_DATABASE: animalShelter
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_ROOT_HOST: "%"        # allow root to connect from the runner
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -prootpassword"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+    env:
+      DJANGO_SETTINGS_MODULE: AnimalShelterVisitScheduler.settings
+      SECRET_KEY: "ci-throwaway-key-not-used-in-production"
+      DB_NAME: animalShelter
+      DB_USER: root                   # root can create the test_ database itself
+      DB_PASSWORD: rootpassword
+      DB_HOST: 127.0.0.1
+      DB_PORT: "3306"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest
+
+  # ---------- 2. build pdoc docs (only if tests passed) ----------
+  build-docs:
+    needs: test
+    runs-on: ubuntu-latest
+
+    env:
+      DJANGO_SETTINGS_MODULE: AnimalShelterVisitScheduler.settings
+      SECRET_KEY: "ci-throwaway-key-not-used-in-production"
+      # present so settings.py loads; doc generation never connects:
+      DB_NAME: placeholder
+      DB_USER: placeholder
+      DB_PASSWORD: placeholder
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pdoc
+
+      - name: Generate documentation
+        run: python gen_docs.py
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  # ---------- 3. publish to GitHub Pages ----------
+  deploy:
+    needs: build-docs
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
