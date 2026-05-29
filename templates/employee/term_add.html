@@ -1,0 +1,43 @@
+{% extends 'employee/base_forms.html' %}
+
+{% block content %}
+	<div class="main_container">
+     {% if request.resolver_match.url_name == 'add_term' %}
+        <h1>Dodaj nowy termin: </h1>
+     {% else %}
+         <h1>Edytuj termin: </h1>
+     {% endif %}
+     <div class="main_form_box">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="form_box">
+                        <label for="{{ form.start_date.id_for_label }}">Data rozpoczęcia wizyty:</label><br>
+                        {{ form.start_date }}
+                    </div>
+                    <div class="form_box">
+                        <label for="{{ form.end_date.id_for_label }}">Data zakończenia wizyty</label><br>
+                        {{ form.end_date}}
+                    </div>
+                    <div class="form_box">
+                        <label for="{{ form.category.id_for_label }}">Wybierz zwierzaka:</label><br>
+                        {{ form.animal }}
+                    </div>
+                    <div class="submit_button">
+                    {% if request.resolver_match.url_name == 'add_term' %}
+                    <button type="submit">Dodaj termin</button>
+
+                    {% else %}
+                     <button type="submit">Zapisz</button>
+                    {% endif %}
+                    </div>
+                </form>
+            </div>
+         </div>
+    {% if form.errors %}
+        <div class="error_box">
+            <p>Please correct the errors below:</p>
+            {{ form.errors }}
+        </div>
+    {% endif %}
+{% endblock %}

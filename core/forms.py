@@ -5,6 +5,13 @@ from .models import Animal, Category,GenderChoices, Appointment, AppointmentStat
 from .validators import validate_admission_after_birth, validate_not_future
 
 class AnimalForm(forms.ModelForm):
+    """
+    A ModelForm for creating and updating Animal records.
+
+    Handles the input for animal details, including image uploads. It automatically
+    limits the category choices to active categories and restricts the UI to 
+    prevent selecting future dates for admission and birth.
+    """
     class Meta:
         model = Animal
         fields = [
@@ -23,6 +30,17 @@ class AnimalForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        """
+        Initializes the form, setting dynamic attributes and querysets.
+
+        Filters the `category` dropdown to show only active categories, sets HTML5 
+        'max' attributes on date fields to prevent future date selection in the UI, 
+        and appends the 'form-control' CSS class to all widgets.
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.filter(is_active=True)
 
@@ -35,6 +53,20 @@ class AnimalForm(forms.ModelForm):
             field.widget.attrs['class'] = (css + ' form-control').strip()
 
     def clean(self):
+        """
+        Validates the cleaned data for the animal form.
+
+        Ensures that neither the birth date nor the admission date is in the future.
+        Additionally, it verifies that the birth date logically precedes or equals 
+        the admission date.
+
+        Returns:
+            dict: The validated and cleaned data dictionary.
+
+        Raises:
+            ValidationError: If any date validations fail, errors are attached 
+                to the respective fields.
+        """
         cleaned_data = super().clean()
         birth_date = cleaned_data.get('birth_date')
         admission_date = cleaned_data.get('admission_date')
@@ -50,7 +82,7 @@ class AnimalForm(forms.ModelForm):
             self.add_error('admission_date', e)
 
         try:
-            validate_admission_after_birth(birth_date, admission_date)
+            validate_A_not_after_B(birth_date, admission_date, "Data urodzin", "daty przyjęcia do schroniska")
         except ValidationError as e:
             self.add_error('admission_date', e)
 

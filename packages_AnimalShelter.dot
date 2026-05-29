@@ -1,0 +1,55 @@
+digraph "packages_AnimalShelter" {
+rankdir=BT
+charset="utf-8"
+"core" [color="black", label=<core>, shape="box", style="solid"];
+"core.admin" [color="black", label=<core.admin>, shape="box", style="solid"];
+"core.apps" [color="black", label=<core.apps>, shape="box", style="solid"];
+"core.decorators" [color="black", label=<core.decorators>, shape="box", style="solid"];
+"core.filters" [color="black", label=<core.filters>, shape="box", style="solid"];
+"core.forms" [color="black", label=<core.forms>, shape="box", style="solid"];
+"core.migrations" [color="black", label=<core.migrations>, shape="box", style="solid"];
+"core.migrations.0001_initial" [color="black", label=<core.migrations.0001_initial>, shape="box", style="solid"];
+"core.models" [color="black", label=<core.models>, shape="box", style="solid"];
+"core.repositories" [color="black", label=<core.repositories>, shape="box", style="solid"];
+"core.services" [color="black", label=<core.services>, shape="box", style="solid"];
+"core.tests" [color="black", label=<core.tests>, shape="box", style="solid"];
+"core.urls" [color="black", label=<core.urls>, shape="box", style="solid"];
+"core.validators" [color="black", label=<core.validators>, shape="box", style="solid"];
+"core.views" [color="black", label=<core.views>, shape="box", style="solid"];
+"user_login" [color="black", label=<user_login>, shape="box", style="solid"];
+"user_login.admin" [color="black", label=<user_login.admin>, shape="box", style="solid"];
+"user_login.apps" [color="black", label=<user_login.apps>, shape="box", style="solid"];
+"user_login.facade" [color="black", label=<user_login.facade>, shape="box", style="solid"];
+"user_login.factory" [color="black", label=<user_login.factory>, shape="box", style="solid"];
+"user_login.forms" [color="black", label=<user_login.forms>, shape="box", style="solid"];
+"user_login.interfaces" [color="black", label=<user_login.interfaces>, shape="box", style="solid"];
+"user_login.migrations" [color="black", label=<user_login.migrations>, shape="box", style="solid"];
+"user_login.models" [color="black", label=<user_login.models>, shape="box", style="solid"];
+"user_login.repositories" [color="black", label=<user_login.repositories>, shape="box", style="solid"];
+"user_login.services" [color="black", label=<user_login.services>, shape="box", style="solid"];
+"user_login.tests" [color="black", label=<user_login.tests>, shape="box", style="solid"];
+"user_login.urls" [color="black", label=<user_login.urls>, shape="box", style="solid"];
+"user_login.views" [color="black", label=<user_login.views>, shape="box", style="solid"];
+"core.filters" -> "core.models" [arrowhead="open", arrowtail="none"];
+"core.forms" -> "core.models" [arrowhead="open", arrowtail="none"];
+"core.forms" -> "core.validators" [arrowhead="open", arrowtail="none"];
+"core.repositories" -> "core.models" [arrowhead="open", arrowtail="none"];
+"core.repositories" -> "core.models" [arrowhead="open", arrowtail="none"];
+"core.services" -> "core.models" [arrowhead="open", arrowtail="none"];
+"core.services" -> "core.repositories" [arrowhead="open", arrowtail="none"];
+"core.views" -> "core.decorators" [arrowhead="open", arrowtail="none"];
+"core.views" -> "core.filters" [arrowhead="open", arrowtail="none"];
+"core.views" -> "core.forms" [arrowhead="open", arrowtail="none"];
+"core.views" -> "core.services" [arrowhead="open", arrowtail="none"];
+"user_login.facade" -> "user_login.interfaces" [arrowhead="open", arrowtail="none"];
+"user_login.factory" -> "user_login.facade" [arrowhead="open", arrowtail="none"];
+"user_login.factory" -> "user_login.interfaces" [arrowhead="open", arrowtail="none"];
+"user_login.factory" -> "user_login.repositories" [arrowhead="open", arrowtail="none"];
+"user_login.factory" -> "user_login.services" [arrowhead="open", arrowtail="none"];
+"user_login.forms" -> "core.models" [arrowhead="open", arrowtail="none"];
+"user_login.repositories" -> "core.models" [arrowhead="open", arrowtail="none"];
+"user_login.repositories" -> "user_login.interfaces" [arrowhead="open", arrowtail="none"];
+"user_login.services" -> "user_login.interfaces" [arrowhead="open", arrowtail="none"];
+"user_login.views" -> "user_login.factory" [arrowhead="open", arrowtail="none"];
+"user_login.views" -> "user_login.forms" [arrowhead="open", arrowtail="none"];
+}

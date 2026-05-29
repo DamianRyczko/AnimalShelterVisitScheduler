@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Cat Store{% endblock %}</title> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <title>{% block title %}Spacerownik{% endblock %}</title> <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
@@ -25,14 +25,12 @@
                 <a href="{% url 'home' %}" class="nav_button">Powrót do terminarza</a>
             {% endif %}
             {% if request.resolver_match.url_name != 'appointment_history' %}
-                <a href="">
-                    <div class="nav_button">Historia wizyt</div>
-                </a>
+                <a href="{% url 'appointment_history' %}" class="nav_button">Historia wizyt</a>
             {% endif %}
 
 
             {% if request.resolver_match.url_name != 'appointments' %}
-            <a href="" class="nav_button cart_button">
+            <a href="{% url 'appointments' %}" class="nav_button cart_button">
                     Wizyty
             </a>
             {% endif %}

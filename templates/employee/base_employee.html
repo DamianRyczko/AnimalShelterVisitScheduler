@@ -28,12 +28,12 @@
             {% endif %}
 
             {% if request.resolver_match.url_name != 'employee_categories' %}
-                <a href="">
+                <a href="{% url 'employee_categories' %}">
                     <div class="nav_button">Kategorie</div>
                 </a>
             {% endif %}
             {% if request.resolver_match.url_name != 'employee_orders' %}
-            <a href="">
+            <a href="{% url 'employee_terms' %}">
                 <div class="nav_button">Terminy</div>
             </a>
             {% endif %}

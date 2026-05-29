@@ -6,6 +6,12 @@ class AuthService(IAuthService):
         self.repo = repo
 
     def register_customer(self, user_data, customer_data):
+        """
+        This funtion is used to register a customer.
+        :param user_data: data from django user auth (username, password)
+        :param customer_data: data from csutomer form (telephone etc.)
+        :return: user object
+        """
         with transaction.atomic():
             user = self.repo.create_user(user_data)
             self.repo.create_customer(user, customer_data)

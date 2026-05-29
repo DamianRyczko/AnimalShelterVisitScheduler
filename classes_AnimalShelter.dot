@@ -1,0 +1,57 @@
+digraph "classes_AnimalShelter" {
+rankdir=BT
+charset="utf-8"
+"core.models.Animal" [color="black", fontcolor="black", label=<Animal>, shape="record", style="solid"];
+"core.filters.AnimalFilter" [color="black", fontcolor="black", label=<AnimalFilter>, shape="record", style="solid"];
+"core.forms.AnimalForm" [color="black", fontcolor="black", label=<AnimalForm>, shape="record", style="solid"];
+"core.repositories.AnimalRepository" [color="black", fontcolor="black", label=<AnimalRepository>, shape="record", style="solid"];
+"core.services.AnimalService" [color="black", fontcolor="black", label=<AnimalService>, shape="record", style="solid"];
+"core.models.Appointment" [color="black", fontcolor="black", label=<Appointment>, shape="record", style="solid"];
+"core.models.AppointmentStatusChoices" [color="black", fontcolor="black", label=<AppointmentStatusChoices>, shape="record", style="solid"];
+"user_login.facade.AuthFacade" [color="black", fontcolor="black", label=<AuthFacade>, shape="record", style="solid"];
+"user_login.services.AuthService" [color="black", fontcolor="black", label=<AuthService>, shape="record", style="solid"];
+"core.repositories.BaseRepository" [color="black", fontcolor="black", label=<BaseRepository>, shape="record", style="solid"];
+"core.services.BaseService" [color="black", fontcolor="black", label=<BaseService>, shape="record", style="solid"];
+"core.models.Category" [color="black", fontcolor="black", label=<Category>, shape="record", style="solid"];
+"core.repositories.CategoryRepository" [color="black", fontcolor="black", label=<CategoryRepository>, shape="record", style="solid"];
+"core.services.CategoryService" [color="black", fontcolor="black", label=<CategoryService>, shape="record", style="solid"];
+"core.apps.CoreConfig" [color="black", fontcolor="black", label=<CoreConfig>, shape="record", style="solid"];
+"user_login.forms.CustomerForm" [color="black", fontcolor="black", label=<CustomerForm>, shape="record", style="solid"];
+"user_login.repositories.DjangoAuthRepository" [color="black", fontcolor="black", label=<DjangoAuthRepository>, shape="record", style="solid"];
+"core.models.GenderChoices" [color="black", fontcolor="black", label=<GenderChoices>, shape="record", style="solid"];
+"user_login.interfaces.IAuthFacade" [color="black", fontcolor="black", label=<IAuthFacade>, shape="record", style="solid"];
+"user_login.interfaces.IAuthRepository" [color="black", fontcolor="black", label=<IAuthRepository>, shape="record", style="solid"];
+"user_login.interfaces.IAuthService" [color="black", fontcolor="black", label=<IAuthService>, shape="record", style="solid"];
+"user_login.forms.LoginForm" [color="black", fontcolor="black", label=<LoginForm>, shape="record", style="solid"];
+"core.filters.AnimalFilter.Meta" [color="black", fontcolor="black", label=<Meta>, shape="record", style="solid"];
+"core.filters.TermFilter.Meta" [color="black", fontcolor="black", label=<Meta>, shape="record", style="solid"];
+"core.forms.AnimalForm.Meta" [color="black", fontcolor="black", label=<Meta>, shape="record", style="solid"];
+"core.models.Profile.Meta" [color="black", fontcolor="black", label=<Meta>, shape="record", style="solid"];
+"core.models.Category.Meta" [color="black", fontcolor="black", label=<Meta>, shape="record", style="solid"];
+"core.models.Term.Meta" [color="black", fontcolor="black", label=<Meta>, shape="record", style="solid"];
+"user_login.forms.UserRegistrationForm.Meta" [color="black", fontcolor="black", label=<Meta>, shape="record", style="solid"];
+"user_login.forms.CustomerForm.Meta" [color="black", fontcolor="black", label=<Meta>, shape="record", style="solid"];
+"core.migrations.0001_initial.Migration" [color="black", fontcolor="black", label=<Migration>, shape="record", style="solid"];
+"core.models.Profile" [color="black", fontcolor="black", label=<Profile>, shape="record", style="solid"];
+"core.models.Term" [color="black", fontcolor="black", label=<Term>, shape="record", style="solid"];
+"core.filters.TermFilter" [color="black", fontcolor="black", label=<TermFilter>, shape="record", style="solid"];
+"core.repositories.TermRepository" [color="black", fontcolor="black", label=<TermRepository>, shape="record", style="solid"];
+"core.services.TermService" [color="black", fontcolor="black", label=<TermService>, shape="record", style="solid"];
+"user_login.apps.UserLoginConfig" [color="black", fontcolor="black", label=<UserLoginConfig>, shape="record", style="solid"];
+"user_login.forms.UserRegistrationForm" [color="black", fontcolor="black", label=<UserRegistrationForm>, shape="record", style="solid"];
+"core.repositories.AnimalRepository" -> "core.repositories.BaseRepository" [arrowhead="empty", arrowtail="none"];
+"core.repositories.CategoryRepository" -> "core.repositories.BaseRepository" [arrowhead="empty", arrowtail="none"];
+"core.repositories.TermRepository" -> "core.repositories.BaseRepository" [arrowhead="empty", arrowtail="none"];
+"core.services.AnimalService" -> "core.services.BaseService" [arrowhead="empty", arrowtail="none"];
+"core.services.CategoryService" -> "core.services.BaseService" [arrowhead="empty", arrowtail="none"];
+"core.services.TermService" -> "core.services.BaseService" [arrowhead="empty", arrowtail="none"];
+"user_login.facade.AuthFacade" -> "user_login.interfaces.IAuthFacade" [arrowhead="empty", arrowtail="none"];
+"user_login.repositories.DjangoAuthRepository" -> "user_login.interfaces.IAuthRepository" [arrowhead="empty", arrowtail="none"];
+"user_login.services.AuthService" -> "user_login.interfaces.IAuthService" [arrowhead="empty", arrowtail="none"];
+"core.models.Animal" -> "core.filters.AnimalFilter.Meta" [arrowhead="odiamond", arrowtail="none", fontcolor="green", label="model", style="solid"];
+"core.models.Animal" -> "core.forms.AnimalForm.Meta" [arrowhead="odiamond", arrowtail="none", fontcolor="green", label="model", style="solid"];
+"core.models.Profile" -> "user_login.forms.CustomerForm.Meta" [arrowhead="odiamond", arrowtail="none", fontcolor="green", label="model", style="solid"];
+"core.models.Term" -> "core.filters.TermFilter.Meta" [arrowhead="odiamond", arrowtail="none", fontcolor="green", label="model", style="solid"];
+"user_login.interfaces.IAuthRepository" -> "user_login.services.AuthService" [arrowhead="odiamond", arrowtail="none", fontcolor="green", label="repo", style="solid"];
+"user_login.interfaces.IAuthService" -> "user_login.facade.AuthFacade" [arrowhead="odiamond", arrowtail="none", fontcolor="green", label="service", style="solid"];
+}
