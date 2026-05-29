@@ -75,10 +75,6 @@ class AppointmentStatusChoices(models.TextChoices):
     CANCELLED = 'X', 'Cancelled'
     NO_SHOW = 'N', 'No Show'
 
-    COMPLETED = 'D', 'Completed'
-    CANCELLED = 'X', 'Cancelled'
-    NO_SHOW = 'N', 'No Show'
-
 class Appointment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
