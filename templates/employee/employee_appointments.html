@@ -1,0 +1,79 @@
+{% extends 'employee/base_employee.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/employee/employee_product_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/employee/style_employee.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="main_container">
+    <h1>Zarządzanie Wizytami</h1>
+
+    {% if messages %}
+        <div class="error_box">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="item_section">
+        {% for appointment in appointments %}
+        <div class="item_card">
+            <div class="item_miniature">
+            <img src="{{ appointment.term.animal.image.url }}" alt="{{ animal.name }}">
+            </div>
+            <div class="item_info">
+                <h2>Wizyta #{{ appointment.id }}</h3>
+                <h4><strong>Zwierzę:</strong> {{ appointment.term.animal.name }}</h4>
+                <h4><strong>Klient:</strong> {{ appointment.user.user.first_name }} {{ appointment.user.user.last_name }}</h4>
+                <h4><strong>Data:</strong> {{ appointment.term.start_date|date:"j F Y" }}</h4>
+                
+                {% if edit_id == appointment.id %}
+                    
+                    <form action="{% url 'update_appointment_status' appointment.id %}" method="POST" style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
+                        {% csrf_token %}
+                        
+                        <label><strong>Status:</strong></label>
+                        <select name="status" class="form-control" style="padding: 5px; border-radius: 5px;">
+                            <option value="P" {% if appointment.status == 'P' %}selected{% endif %}>Oczekująca (Received)</option>
+                            <option value="C" {% if appointment.status == 'C' %}selected{% endif %}>Potwierdzona (Confirmed)</option>
+                            <option value="R" {% if appointment.status == 'R' %}selected{% endif %}>Odrzucona (Rejected)</option>
+                            <option value="D" {% if appointment.status == 'D' %}selected{% endif %}>Zrealizowana (Completed)</option>
+                            <option value="X" {% if appointment.status == 'X' %}selected{% endif %}>Anulowana (Cancelled)</option> 
+                            <option value="N" {% if appointment.status == 'N' %}selected{% endif %}>Nieobecny (No Show)</option>
+                        </select>
+
+                        <button type="submit" class="function_button">
+                            Potwierdź
+                        </button>
+                        
+                        <a href="{% url 'employee_appointments' %}" class="function_button">
+                            Anuluj
+                        </a>
+                    </form>
+
+                {% else %}
+
+                    <h4>
+                        <strong>Obecny status:</strong> 
+                        <span class="status-badge" style="font-weight: bold;">
+                            {{ appointment.get_status_display }}
+                        </span>
+                    </h4>
+                    
+                    <a href="?edit={{ appointment.id }}" class="function_button">
+                        Zmień status
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+            <p>Brak wizyt w systemie.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

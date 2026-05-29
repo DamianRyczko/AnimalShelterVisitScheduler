@@ -70,6 +70,10 @@ class AppointmentStatusChoices(models.TextChoices):
     PENDING = 'P', 'Pending'
     CONFIRMED = 'C', 'Confirmed'
     REJECTED = 'R', 'Rejected'
+    
+    COMPLETED = 'D', 'Completed'
+    CANCELLED = 'X', 'Cancelled'
+    NO_SHOW = 'N', 'No Show'
 
     COMPLETED = 'D', 'Completed'
     CANCELLED = 'X', 'Cancelled'
@@ -81,4 +85,5 @@ class Appointment(models.Model):
     status = models.CharField(max_length=1, choices=AppointmentStatusChoices.choices, default=AppointmentStatusChoices.PENDING)
     user = models.ForeignKey(Profile, on_delete=models.PROTECT)
     term = models.ForeignKey(Term, on_delete=models.PROTECT)
+    is_active= models.BooleanField(default=True)
 

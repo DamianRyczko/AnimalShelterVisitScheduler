@@ -37,6 +37,10 @@ class BaseRepository(Generic[T]):
 class AnimalRepository(BaseRepository[Animal]):
     def __init__(self):
         super().__init__(Animal)
+    
+class AppointmentRepository(BaseRepository[Appointment]):
+    def __init__(self):
+        super().__init__(Appointment)
 
     def category_has_animals(self, category: Category) -> bool:
         return Animal.objects.filter(category=category).exists()
