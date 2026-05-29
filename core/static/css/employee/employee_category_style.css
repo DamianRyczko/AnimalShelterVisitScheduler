@@ -1,0 +1,142 @@
+.category_section {
+    width: 95%;
+    overflow: auto;
+    padding: 20px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+.category_section a{
+    text-decoration: none;
+}
+/*category cards*/
+.category_card{
+    background-color: var(--products-emp-back-color);
+    padding: 0;
+    margin-bottom: 15px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+.category_card:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+}
+/*category info*/
+.category_info{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.category_info h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--dark-text);
+}
+.category_info h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #666666;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+/*button box*/
+.button_box{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    text-transform: uppercase;
+}
+.button_box h4{
+    display: none;
+}
+.button_box a{
+    text-decoration: none;
+    color: var(--dark-text);
+
+}
+.button_box a:visited{
+    text-decoration: none;
+    color: var(--dark-text);
+}
+.button_box form {
+    margin: 0;
+}
+/*function buttons*/
+.function_button {
+    padding: 8px 16px;
+    background-color: var(--button-emp-color);
+    color: var(--dark-text);
+    width: auto;
+    text-align: center;
+    border-radius: 15px;
+    border: none;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: uppercase;
+}
+.function_button:hover{
+    background-color: var(--hover-emp-button-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+/*add card*/
+.add_card{
+    background-color:var(--products-emp-back-color);
+    height: 150px;
+    margin-bottom: 15px;
+    display: flex;
+    text-align: center;
+    color: var(--dark-text);
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    font-size: 80px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.add_card:hover {
+    background-color: #efefef;
+    border-color: #bbb;
+    transform: scale(1.02);
+}
+.add_card h2 {
+    margin: 0;
+}
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .category_card {
+        flex-direction: column;
+    }
+
+    .button_box {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .category_section {
+        width: 100%;
+    }
+
+    .category_card {
+        padding: 15px;
+    }
+
+    .category_info h2 {
+        font-size: 16px;
+    }
+
+    .function_button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
