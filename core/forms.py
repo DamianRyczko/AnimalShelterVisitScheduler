@@ -87,6 +87,16 @@ class AnimalForm(forms.ModelForm):
             self.add_error('admission_date', e)
 
         return cleaned_data
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['title', 'description']
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter category name'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        }
     
 class TermForm(forms.ModelForm):
     """

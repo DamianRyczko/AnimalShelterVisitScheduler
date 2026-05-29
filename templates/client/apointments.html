@@ -1,0 +1,62 @@
+{% extends 'client/base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{%  static 'css/client/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/client/style_appointments.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="main_container">
+        <div class = "title_banner">
+            <h1>Nadchodzące teminy spacerów 📅</h1>
+        </div>
+    <div class ="appointment_info_section">
+        <div class ="item_section">
+            {% for item in appointments %}
+            <div class="item_card">
+                    <h1>{{ item.term.animal.name }}</h1>
+                    <h4>Czas: {{ item.term.start_date }} - {{ item.term.end_date }}</h4>
+                    <h4>Status: {{ item.get_status_display }}</h4>
+                    <div class="delete_button">
+                        <form action="{% url 'cancel_appointment' item.term.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit">Anuluj</button>
+                        </form>
+                    </div>
+            </div>
+            {% empty %}
+                <p>No items in appointments :(</p>
+            {% endfor %}
+        </div>
+        <div class = "right_section">
+            <div class="filter">
+                <form method="get">
+                    <div class="filter-box">
+                        <label for="{{ filter.form.title.id_for_label }}">Szukaj zwierzaka:</label><br>
+                        {{ filter.form.animal }}
+                    </div>
+
+                    <div class="filter-box">
+                        <label for="{{ filter.form.category.id_for_label }}">Status:</label><br>
+                        {{ filter.form.status }}
+                    </div>
+                    <div class="filter-box">
+                        <label for="{{ filter.form.gender.id_for_label }}">Data od:</label><br>
+                        {{ filter.form.start_date }}
+                    </div>
+
+                    <div class="filter-box">
+                        <label for="{{ filter.form.ordering.id_for_label }}">Data do:</label><br>
+                        {{ filter.form.end_date }}
+                    </div>
+                    <div class="submit_button">
+                        <button type="submit">Zastosuj</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

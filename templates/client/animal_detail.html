@@ -49,6 +49,23 @@
                     <div class = "term_date">
                         Koniec: {{ term.end_date }}
                     </div>
+                    {% if term in user_reserved_terms %}
+                    <div class = action_button>
+                        <form action="{% url 'cancel_appointment' term.id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit" class = "delete_button">Usuń z kalendarza</button>
+                        </form>
+                    </div>
+                    {% else %}
+                     <div class = action_button>
+                        <form action="{% url 'make_appointment' term.id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit" class = "add_button">Dodaj do kalendarza</button>
+                        </form>
+                    </div>
+                    {% endif %}
                 </div>
             {% empty %}
             <p>No cats available right now :(</p>

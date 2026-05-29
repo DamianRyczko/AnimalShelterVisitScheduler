@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .decorators import allowed_roles
-from .services import animal_service, appointment_service, term_service
-from .filters import AnimalFilter, AppointmentFilter, TermFilter, TermFilterEmployee
-from .forms import AnimalForm, TermForm
+from .services import animal_service, appointment_service, term_service, category_service
+from .filters import AnimalFilter, AppointmentFilter, TermFilter, TermFilterEmployee, ActiveAppointmentFilter
+from .forms import AnimalForm, TermForm, CategoryForm
 
 
 #---------------------------- HOME ---------------------------
@@ -55,8 +55,45 @@ def history(request):
     }
     return render(request, 'client/history.html', context)
 
+def animal_detail(request, animal_id):
+    animal = animal_service.get_by_id(animal_id)
+
+    term_queryset = term_service.get_all_for_animal(animal)
+    term_filter = TermFilter(request.GET, queryset=term_queryset)
+    user_appointments = appointment_service.get_user_appointments(request.user)
+    reserved_terms = [appointment.term for appointment in user_appointments]
+
+    context = {
+        'animal': animal,
+        'filter': term_filter,
+        'terms': term_filter.qs,
+        'user_reserved_terms': reserved_terms,
+    }
+    return render(request, 'client/animal_detail.html', context)
+
+def appointments(request):
+    appointments_queryset = appointment_service.get_user_appointments(request.user)
+    appointments_filter = ActiveAppointmentFilter(request.GET, queryset=appointments_queryset)
+    context = {
+        'filter': appointments_filter,
+        'appointments': appointments_filter.qs
+    }
+    return render(request, 'client/apointments.html', context)
+
+def make_appointment(request, term_id):
+    if request.method == 'POST':
+        appointment_service.make_appointment(request.user, term_id)
+    return redirect(request.POST.get('next') or 'appointments')
+
+
+def cancel_appointment(request, term_id):
+    if request.method == 'POST':
+        appointment_service.cancel_appointment(term_id)
+
+    return redirect(request.POST.get('next') or 'appointments')
+
 #---------------------------- EMPLOYEE ---------------------------
-#@allowed_roles(allowed_groups=['Employees', 'Admins'])
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
 def employee_animals(request):
     """
     Renders the employee's view for managing animals.
@@ -114,17 +151,8 @@ def animal_detail(request, animal_id):
     """
     animal = animal_service.get_by_id(animal_id)
 
-    term_queryset = term_service.get_all_for_animal(animal)
-    term_filter = TermFilter(request.GET, queryset=term_queryset)
 
-    context = {
-        'animal': animal,
-        'filter': term_filter,
-        'terms': term_filter.qs,
-    }
-    return render(request, 'client/animal_detail.html', context)
-
-#@allowed_roles(allowed_groups=['Employees', 'Admins'])
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
 def manage_animal(request, pk = None):
     """
     Handles the creation of a new animal or the modification of an existing one.
@@ -188,7 +216,7 @@ def manage_term(request, pk=None):
         form = TermForm(instance=term)
     return render(request, 'employee/term_add.html', {'form': form})
 
-#@allowed_roles(allowed_groups=['Employees', 'Admins'])
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
 def delete_animal(request, pk):
     """
     Performs a SOFT delete operation on a specific animal.
@@ -205,7 +233,11 @@ def delete_animal(request, pk):
         HttpResponseRedirect: Redirects to the 'employee_animals' view after deletion.
     """
     if request.method == 'POST':
-        animal_service.delete_soft(pk)
+        try:
+            animal_service.delete(pk)
+            messages.success(request, 'Animal deleted')
+        except ValueError as e:
+            messages.error(request, str(e))
     return redirect('employee_animals')
 
 @allowed_roles(allowed_groups=['Employees', 'Admins'])
@@ -228,3 +260,34 @@ def delete_term(request, pk):
             term_service.delete_soft(pk)
             messages.success(request, "Termin usunięty pomyślnie.")
     return redirect('employee_terms')
+
+
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
+def employee_categories(request):
+    categories = category_service.get_all()
+    return render(request, 'employee/employee_categories.html', {'categories': categories})
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
+def manage_category(request, pk=None):
+    category = category_service.get_by_id(pk) if pk else None
+
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            category_obj = form.save(commit=False)
+            category_service.save(category_obj)
+            form.save_m2m()
+
+            return redirect('employee_categories')
+    else:
+        form = CategoryForm(instance=category)
+
+    return render(request, 'employee/category_add.html', {'form': form})
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
+def delete_category(request, pk):
+    if request.method == 'POST':
+        try:
+            category_service.delete(pk)
+            messages.success(request, 'Category deleted')
+        except ValueError as e:
+            messages.error(request, str(e))
+    return redirect('employee_categories')
