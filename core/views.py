@@ -3,7 +3,7 @@ from django.contrib import messages
 from .decorators import allowed_roles
 from .services import animal_service, appointment_service, term_service, category_service
 from .filters import AnimalFilter, AppointmentFilter, TermFilter, TermFilterEmployee, ActiveAppointmentFilter
-from .forms import AnimalForm, TermForm, CategoryForm
+from .forms import AnimalForm, TermForm, CategoryForm, AppointmentStateForm
 
 
 #---------------------------- HOME ---------------------------
@@ -291,3 +291,29 @@ def delete_category(request, pk):
         except ValueError as e:
             messages.error(request, str(e))
     return redirect('employee_categories')
+
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
+def employee_appointments(request):
+    appointments = appointment_service.get_all()
+
+    context = {
+        'appointments': appointments
+    }
+    return render(request, 'employee/employee_appointments.html', context)
+
+
+@allowed_roles(allowed_groups=['Employees', 'Admins'])
+def manage_appointment_status(request, pk):
+    if request.method == 'POST':
+        appointment = appointment_service.get_by_id(pk=pk)
+
+        # Przekazujemy request.POST i instancję, by zaktualizować konkretny rekord
+        form = AppointmentStateForm(request.POST, instance=appointment)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Status wizyty #{appointment.id} został zaktualizowany.")
+        else:
+            messages.error(request, "Wystąpił błąd podczas zmiany statusu.")
+
+    return redirect('employee_appointments')
