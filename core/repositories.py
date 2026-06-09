@@ -48,6 +48,14 @@ class AppointmentRepository(BaseRepository[Appointment]):
     def __init__(self):
         super().__init__(Appointment)
 
+    def cancel_pending_or_confirmed_for_term(self, term: Term) -> int:
+        return Appointment.objects.filter(
+            term=term,
+            status__in=['C','P']
+        ).update(
+            status='X'
+        )
+
     def get_user_appointments(self, profile_id: int) -> QuerySet[Appointment]:
         return Appointment.objects.filter(user=profile_id).filter(status__in=['P','C','R']).order_by(
             'term__start_date', )
@@ -70,6 +78,9 @@ class AppointmentRepository(BaseRepository[Appointment]):
             user = user,
             status__in=['D','X','N']
             )
+    
+    def term_has_appointments(self, term: Term) -> bool:
+        return Appointment.objects.filter(term = term).exists()
 
 class CategoryRepository(BaseRepository[Category]):
     def __init__(self):
@@ -88,13 +99,6 @@ class TermRepository(BaseRepository[Term]):
 
     def get_all_for_animal(self, animal_fk: int) -> QuerySet[Term]:
         return Term.objects.filter(animal=animal_fk)
-    
-    def delete_soft(self, pk: int) -> bool:
-        with transaction.atomic():
-            success = super().delete_soft(pk)
-            if success:
-                Appointment.objects.filter(term_id=pk, status='P').update(status='X') # Pending -> Cancelled
-            return success
 
     def animal_has_terms(self, animal: Animal) -> bool:
         return Term.objects.filter(animal=animal).exists()

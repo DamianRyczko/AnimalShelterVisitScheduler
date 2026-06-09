@@ -187,6 +187,12 @@ class AppointmentService(BaseService[Appointment]):
         term.save(update_fields=["status"])
 
         return self.repository.delete(appointment.id)
+    
+    def cancel_pending_for_term(self, term: Term) -> int:
+        return self.repository.cancel_pending_for_term(term)
+
+    def is_term_linked_to_any_appointment(self, term: Term) -> bool:
+        return self.repository.term_has_appointments(term)
 
     
 appointment_service = AppointmentService() #module Singleton
@@ -212,6 +218,19 @@ class TermService(BaseService[Term]):
     """Service layer handling business logic for the Term model."""
     def __init__(self) -> None:
         super().__init__(TermRepository())
+
+    @transaction.atomic
+    def delete(self, pk: int) -> bool:
+        term = self.get_by_id(pk)
+        if appointment_service.is_term_linked_to_any_appointment(term):
+            success = super().delete_soft(pk)
+
+            if success:
+                appointment_service.cancel_pending_for_term(term)
+            return success
+        else:
+            success = super().delete(pk)
+            return success
 
     def get_for_update(self, term_id: int) -> Term:
         return self.repository.get_for_update(term_id)
