@@ -4,6 +4,10 @@ from datetime import date
 import pytest
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.utils import timezone
+from django.core.files.uploadedfile import SimpleUploadedFile
+
+from core.forms import AnimalForm, TermForm, AppointmentStateForm
 
 from core.models import Profile, Category, Animal, Term, Appointment
 from core.repositories import (
@@ -313,3 +317,85 @@ def test_term_service_get_all_for_animal_returns_related_terms():
     terms = term_service.get_all_for_animal(animal.id)
 
     assert list(terms) == [term_a]
+
+
+@pytest.mark.django_db
+def test_animal_form_date_validations_and_category_queryset():
+    active = create_category(title="Active", is_active=True)
+    inactive = create_category(title="Inactive", is_active=False)
+
+    today = timezone.localdate()
+    future = today.replace(year=today.year + 1)
+    past = today.replace(year=today.year - 1)
+
+    # The category queryset should include only active categories
+    form_empty = AnimalForm()
+    assert active in form_empty.fields['category'].queryset
+    assert inactive not in form_empty.fields['category'].queryset
+
+    # Future birth_date should produce a validation error
+    image = SimpleUploadedFile('img.jpg', b'content', content_type='image/jpeg')
+    data_future_birth = {
+        'name': 'Rex',
+        'description': 'desc',
+        'gender': 'M',
+        'weight': '5.0',
+        'admission_date': today.isoformat(),
+        'birth_date': future.isoformat(),
+        'category': active.id,
+    }
+    form = AnimalForm(data=data_future_birth, files={'image': image})
+    assert not form.is_valid()
+    assert 'birth_date' in form.errors
+
+    # Birth date after admission date should attach error to admission_date
+    data_bad_order = {
+        'name': 'Rex',
+        'description': 'desc',
+        'gender': 'M',
+        'weight': '5.0',
+        'admission_date': past.isoformat(),
+        'birth_date': today.isoformat(),
+        'category': active.id,
+    }
+    form2 = AnimalForm(data=data_bad_order, files={'image': image})
+    assert not form2.is_valid()
+    assert 'admission_date' in form2.errors
+
+
+@pytest.mark.django_db
+def test_term_form_date_validations():
+    category = create_category()
+    animal = create_animal(category)
+
+    today = timezone.localdate()
+    past = today.replace(year=today.year - 1)
+    future = today.replace(year=today.year + 1)
+
+    # Past start/end dates should be invalid
+    data_past = {
+        'start_date': past.isoformat(),
+        'end_date': past.isoformat(),
+        'animal': animal.id,
+    }
+    form = TermForm(data=data_past)
+    assert not form.is_valid()
+    assert 'start_date' in form.errors
+    assert 'end_date' in form.errors
+
+    # Start date after end date should produce error on end_date
+    data_order = {
+        'start_date': future.isoformat(),
+        'end_date': today.isoformat(),
+        'animal': animal.id,
+    }
+    form2 = TermForm(data=data_order)
+    assert not form2.is_valid()
+    assert 'end_date' in form2.errors
+
+
+def test_appointment_state_form_rejects_invalid_status():
+    # Invalid status should be rejected by the form
+    form = AppointmentStateForm(data={'status': 'Z'})
+    assert not form.is_valid()
+    assert 'status' in form.errors
