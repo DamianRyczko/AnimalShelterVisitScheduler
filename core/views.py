@@ -55,7 +55,22 @@ def history(request):
     }
     return render(request, 'client/history.html', context)
 
+@allowed_roles(allowed_groups=['Customers'])
 def animal_detail(request, animal_id):
+    """
+    Displays the detailed view of a specific animal and its available terms.
+
+    Fetches the animal object by its ID and retrieves all terms associated
+    with it. Allows the user to filter the animal's terms using the TermFilter.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+        animal_id (int): The unique identifier of the animal.
+
+    Returns:
+        HttpResponse: Rendered 'client/animal_detail.html' template containing
+            animal details, term filter form, and the filtered list of terms.
+    """
     animal = animal_service.get_by_id(animal_id)
 
     term_queryset = term_service.get_all_for_animal(animal)
@@ -71,6 +86,7 @@ def animal_detail(request, animal_id):
     }
     return render(request, 'client/animal_detail.html', context)
 
+@allowed_roles(allowed_groups=['Customers'])
 def appointments(request):
     appointments_queryset = appointment_service.get_user_appointments(request.user)
     appointments_filter = ActiveAppointmentFilter(request.GET, queryset=appointments_queryset)
@@ -80,12 +96,13 @@ def appointments(request):
     }
     return render(request, 'client/apointments.html', context)
 
+@allowed_roles(allowed_groups=['Customers'])
 def make_appointment(request, term_id):
     if request.method == 'POST':
         appointment_service.make_appointment(request.user, term_id)
     return redirect(request.POST.get('next') or 'appointments')
 
-
+@allowed_roles(allowed_groups=['Customers'])
 def cancel_appointment(request, term_id):
     if request.method == 'POST':
         appointment_service.cancel_appointment(term_id)
@@ -132,24 +149,6 @@ def employee_terms(request):
         }
     
     return render(request, 'employee/employee_terms.html', context)
-
-
-def animal_detail(request, animal_id):
-    """
-    Displays the detailed view of a specific animal and its available terms.
-
-    Fetches the animal object by its ID and retrieves all terms associated 
-    with it. Allows the user to filter the animal's terms using the TermFilter.
-
-    Args:
-        request (HttpRequest): The incoming HTTP request.
-        animal_id (int): The unique identifier of the animal.
-
-    Returns:
-        HttpResponse: Rendered 'client/animal_detail.html' template containing 
-            animal details, term filter form, and the filtered list of terms.
-    """
-    animal = animal_service.get_by_id(animal_id)
 
 
 @allowed_roles(allowed_groups=['Employees', 'Admins'])
@@ -295,9 +294,17 @@ def delete_category(request, pk):
 @allowed_roles(allowed_groups=['Employees', 'Admins'])
 def employee_appointments(request):
     appointments = appointment_service.get_all()
+    edit_id = request.GET.get('edit', None)
+    
+    if edit_id:
+        try:
+            edit_id = int(edit_id)
+        except (ValueError, TypeError):
+            edit_id = None
 
     context = {
-        'appointments': appointments
+        'appointments': appointments,
+        'edit_id': edit_id
     }
     return render(request, 'employee/employee_appointments.html', context)
 

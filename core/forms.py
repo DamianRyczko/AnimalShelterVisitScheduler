@@ -177,14 +177,3 @@ class AppointmentStateForm(forms.ModelForm):
         return status
 
 
-class AppointmentStateForm(forms.ModelForm):
-    class Meta:
-        model = Appointment
-        fields = ['status']
-
-    def clean_status(self):
-        status = self.cleaned_data.get('status')
-        allowed_states = [choice[0] for choice in AppointmentStatusChoices.choices]
-        if status not in allowed_states:
-            raise ValidationError("Wybrano niedozwolony status wizyty.")
-        return status
