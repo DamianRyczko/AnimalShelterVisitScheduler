@@ -9,7 +9,7 @@ class AnimalFilter(django_filters.FilterSet):
     Allows users to search for animals by title (partial match), filter by 
     category and gender, and order the results by weight or birth date.
     """
-    title = django_filters.CharFilter(field_name='title', lookup_expr='icontains', label='Szukaj zwierzaka')
+    title = django_filters.CharFilter(field_name='name', lookup_expr='icontains', label='Szukaj zwierzaka')
 
     ordering = django_filters.OrderingFilter(
         fields=(('weight', 'weight'),('birth_date', 'date')),
