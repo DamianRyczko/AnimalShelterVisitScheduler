@@ -48,7 +48,7 @@ class AppointmentRepository(BaseRepository[Appointment]):
     def __init__(self):
         super().__init__(Appointment)
 
-    def cancel_pending_or_confirmed_for_term(self, term: Term) -> int:
+    def cancel_pending_for_term(self, term: Term) -> int:
         return Appointment.objects.filter(
             term=term,
             status__in=['C','P']

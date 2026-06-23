@@ -57,12 +57,18 @@
                             <button type="submit" class = "delete_button">Usuń z kalendarza</button>
                         </form>
                     </div>
-                    {% else %}
+                    {% elif term.status %}
                      <div class = action_button>
                         <form action="{% url 'make_appointment' term.id %}" method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="next" value="{{ request.get_full_path }}">
                             <button type="submit" class = "add_button">Dodaj do kalendarza</button>
+                        </form>
+                    </div>
+                    {% else %}
+                     <div class = action_button>
+                        <form>
+                            <button type="button" class = "add_button" disabled >Dodaj do kalendarza</button>
                         </form>
                     </div>
                     {% endif %}

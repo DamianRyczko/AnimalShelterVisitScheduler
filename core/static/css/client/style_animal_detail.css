@@ -178,3 +178,9 @@
 .add_button:hover{
     background-color: darkgreen;
 }
+.add_button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    opacity: 0.7;
+}

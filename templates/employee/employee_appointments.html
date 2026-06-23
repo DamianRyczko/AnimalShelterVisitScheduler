@@ -27,7 +27,7 @@
             <img src="{{ appointment.term.animal.image.url }}" alt="{{ animal.name }}">
             </div>
             <div class="item_info">
-                <h2>Wizyta #{{ appointment.id }}</h3>
+                <h2>Wizyta #{{ appointment.id }}</h2>
                 <h4><strong>Zwierzę:</strong> {{ appointment.term.animal.name }}</h4>
                 <h4><strong>Klient:</strong> {{ appointment.user.user.first_name }} {{ appointment.user.user.last_name }}</h4>
                 <h4><strong>Data:</strong> {{ appointment.term.start_date|date:"j F Y" }}</h4>

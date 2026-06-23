@@ -27,7 +27,6 @@ class AuthService(IAuthService):
             return "home"
 
     def login_user(self, request, user):
-        # Adapter do mechanizmu sesji Django
         django_login(request, user)
 
     def logout_user(self, request):
