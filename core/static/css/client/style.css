@@ -1,16 +1,18 @@
 
 :root {
-    --primary-color: #2A394E;
-    --secondary-color: #2A394E;
-    --navbar-color: #2A394E;
-    --background-color: #FFFBF0;
-    --main-box-color: #E5E3D0;
-    --nav-button-color: #ffffff;
-    --button-color:#F23D3D;
-    --hover-button-color:#D63737;
-    --product-hover-color:#E99BAA;
-    --produkty-back-color:#F9C3CD;
-    --product-card-color: #FDD5DEFF;
+    --site-backgorund-color: #F2E9D4;
+    --card-section-color: #E0B6CD;
+    --card-background-color: #CC98B1;
+    --card-background-hover-color: #B87A98;
+    --buttons-active-color: #746AA3;
+    --buttons-active-hover-color: #4B4169;
+    --buttons-on-plum-color: #B68CE2;
+    --buttons-on-plum-hover-color: #976AC6;
+    --buttons-inactive-color: #B0AAB5;
+    --buttons-inactive-hover-color: #5D5A5F;
+    --header-filter-bacground-color: #5E4875;
+    --footer-color: #D0C4BF;
+    --term-color: #799892;
     --light-gray: #E8E8E8;
     --dark-text: #000000;
 }
@@ -25,14 +27,14 @@ html {
 /* Body Styling */
 body {
     font-family: 'Alegreya Sans SC', sans-serif;
-    background-color: var(--main-box-color);
+    background-color: var(--site-backgorund-color);
     background-image:url("../../images/Background_Kitty.png");
     background-size: cover;
     background-attachment: fixed;
 }
 /* Banner Styling*/
 .banner{
-    background-color: var(--navbar-color);
+    background-color: var(--header-filter-bacground-color);
     min-height: 300px;
     max-height: 400px;
     background-image: url('../../images/Banner.png');
@@ -49,7 +51,7 @@ nav {
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: uppercase;
     z-index: 100;
-    background-color: var(--navbar-color);
+    background-color: var(--header-filter-bacground-color);
     padding: 0 30px;
     display: flex;
     justify-content: flex-start; /* Pushes items to edges */
@@ -78,7 +80,7 @@ nav {
     font-weight: 700;
     padding: 12px 20px;
     border-radius: 25px;
-    background-color:var(--button-color);
+    background-color:var(--buttons-active-color);
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
@@ -90,7 +92,7 @@ nav {
     gap: 8px;
 }
 .nav_button:hover {
-    background-color: var(--hover-button-color);
+    background-color: var(--buttons-active-hover-color);
     transform: translateY(-2px);
 }
 .nav_button:visited{
@@ -144,7 +146,7 @@ footer{
     padding: 30px;
     width: 100%;
     color: var(--dark-text);
-    background-color: var(--main-box-color);
+    background-color: var(--footer-color);
 }
 footer h4{
     align-content: space-between;

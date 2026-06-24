@@ -14,7 +14,7 @@
     color: #FFFFFF;
     margin: 20px 0;
     border-radius: 25px;
-    background-color: var(--navbar-color);
+    background-color: var(--c);
     font-size: 40px;
     font-weight: 700;
 }
@@ -30,15 +30,17 @@
     box-sizing: border-box;
 }
 .left_section {
-    width: 22%;
+    width: 25%;
 }
 /* Fileter formbox*/
 .filter_form_box {
-    position: fixed;
-    top: 400px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
     bottom: 100px;
     width: 280px;
-    background-color: var(--navbar-color);
+    height: 500px;
+    background-color: var(--header-filter-bacground-color);
     border-radius: 0 25px 25px 0;
     padding: 10px;
     display: flex;
@@ -82,7 +84,7 @@
 .submit_button button{
     width: 100%;
     padding: 12px;
-    background-color: var(--button-color);
+    background-color: var(--buttons-on-plum-color);
     color: #FFFFFF;
     border: none;
     border-radius: 20px;
@@ -94,12 +96,13 @@
     font-family: 'Alegreya Sans SC', sans-serif;
 }
 .submit_button button:hover{
-    background-color: var(--hover-button-color);
+    background-color: var(--buttons-on-plum-hover-color);
     transform: translateY(-2px);
+    box-shadow: 0 10px 25px var(--buttons-on-plum-color);
 }
 /*Center section*/
 .center_section{
-    background-color: var(--produkty-back-color);
+    background-color: var(--card-section-color);
     width: 100%;
     max-width: 1400px;
     border-radius: 25px;
@@ -121,8 +124,8 @@
     display: none;
 }
 .product_card{
-    background-color: #FDD5DEFF;
-    border: 2px solid var(--produkty-back-color);
+    background-color: var(--card-background-color);
+    
     padding: 20px;
     margin: 0 0 15px 0;
     display: flex;
@@ -135,7 +138,7 @@
     box-sizing: border-box;
 }
 .product_card:hover {
-    background-color: var(--product-hover-color);
+    background-color: var(--card-background-hover-color);
     transform: translateY(-5px);
 }
 .product_minature{
@@ -174,7 +177,7 @@
 .product_description h4{
     font-size: 14px;
     font-weight: 600;
-    color: #666;
+    color: #000;
     margin-bottom: 5px;
     text-transform: uppercase;
 }
