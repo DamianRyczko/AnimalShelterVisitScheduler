@@ -77,3 +77,7 @@ This stops and removes the containers (your database data is preserved in a Dock
 - If port `8000` is already in use on your machine, edit the `ports` section in `docker-compose.yml` to map a different host port.
 - The MySQL database is persisted in a Docker volume, so your data survives container restarts.
 - On older Docker installations the command is `docker-compose` (with a hyphen) instead of `docker compose`.
+
+## 📝 [Documentation](https://damianryczko.github.io/AnimalShelterVisitScheduler/)
+
+
