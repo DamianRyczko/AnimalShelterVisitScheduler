@@ -1,11 +1,16 @@
 :root {
-    --primary-emp-color: #1c1d1f;
-    --secondary-emp-color: #26292d;
-    --background-emp-color: #efefef;
-    --button-emp-color: #515151cc;
-    --hover-emp-button-color: #515151e0;
-    --product-emp-hover-color: #f3f3f3;
-    --products-emp-back-color: #f3f3f3;
+     --site-backgorund-color: #F2E9D4;
+    --card-section-color: #E0B6CD;
+    --card-background-color: #CC98B1;
+    --card-background-hover-color: #B87A98;
+    --buttons-active-color: #746AA3;
+    --buttons-active-hover-color: #4B4169;
+    --buttons-on-plum-color: #B68CE2;
+    --buttons-on-plum-hover-color: #976AC6;
+    --buttons-inactive-color: #B0AAB5;
+    --buttons-inactive-hover-color: #5D5A5F;
+    --header-filter-bacground-color: #5E4875;
+    --footer-color: #D0C4BF;
     --dark-text: #000000;
     --white-text: #ffffff;
 }
@@ -18,13 +23,13 @@
 
 body {
     font-family: 'Alegreya Sans SC', sans-serif;
-    background-color: var(--button-emp-color);
+    background-color: var(--site-backgorund-color);
     min-height: 100vh;
 }
 
 /* Form container */
 .main_container {
-    background-color: var(--primary-emp-color);
+    background-color: var(--header-filter-bacground-color);
     margin: 100px auto;
     width: 100%;
     max-width: 700px;
@@ -153,7 +158,7 @@ body {
     width: 100%;
     max-width: 250px;
     height: 50px;
-    background-color: var(--button-emp-color);
+    background-color: var(--buttons-on-plum-color);
     color: white;
     border: none;
     border-radius: 25px;
@@ -166,7 +171,7 @@ body {
 }
 
 .submit_button button:hover {
-    background-color: var(--hover-emp-button-color);
+    background-color: var(--buttons-on-plum-hover-color);
     transform: translateY(-2px);
     box-shadow: 0 8px 15px rgba(0,0,0,0.2);
 }

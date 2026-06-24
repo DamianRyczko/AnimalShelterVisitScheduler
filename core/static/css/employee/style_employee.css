@@ -1,12 +1,17 @@
 
 :root {
-    --primary-emp-color: #1c1d1f;
-    --secondary-emp-color: #26292d;
-    --background-emp-color: #efefef;
-    --button-emp-color: #515151cc;
-    --hover-emp-button-color: #515151e0;
-    --product-emp-hover-color: #f3f3f3;
-    --products-emp-back-color: #f3f3f3;
+    --site-backgorund-color: #F2E9D4;
+    --card-section-color: #E0B6CD;
+    --card-background-color: #CC98B1;
+    --card-background-hover-color: #B87A98;
+    --buttons-active-color: #746AA3;
+    --buttons-active-hover-color: #4B4169;
+    --buttons-on-plum-color: #B68CE2;
+    --buttons-on-plum-hover-color: #976AC6;
+    --buttons-inactive-color: #B0AAB5;
+    --buttons-inactive-hover-color: #5D5A5F;
+    --header-filter-bacground-color: #5E4875;
+    --footer-color: #D0C4BF;
     --dark-text: #000000;
     --white-text: #ffffff;
 }
@@ -21,12 +26,12 @@ html{
 body {
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: uppercase;
-    background-color: var(--background-emp-color);
+    background-color: var(--site-backgorund-color);
 }
 /* 4. Navbar Styling */
 nav {
     z-index: 100;
-    background-color: var(--secondary-emp-color);
+    background-color: var(--header-filter-bacground-color);
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
@@ -48,11 +53,11 @@ nav {
     font-weight: 600;
     padding: 8px 16px;
     border-radius: 20px;
-    background-color:var(--button-emp-color);
+    background-color:var(--header-filter-bacground-color);
     transition: all 0.3s ease;
 }
 .nav_menu a:hover {
-    background-color: var(--hover-emp-button-color);
+    background-color: var(--header-filter-bacground-color);
     transform: translateY(-2px);
 }
 .nav_menu a:visited {
@@ -67,7 +72,7 @@ nav {
     align-items: center;
 }
 .user_section {
-    background-color: var(--white-text);
+    background-color: var(--card-section-color);
     padding: 8px 16px;
     color: var(--dark-text);
     display: flex;
@@ -87,11 +92,11 @@ nav {
     font-weight: 600;
     padding: 8px 16px;
     border-radius: 20px;
-    background-color: var(--button-emp-color);
+    background-color: var(--buttons-on-plum-color);
     transition: all 0.3s ease;
 }
 .user_controls a:hover {
-    background-color: var(--hover-emp-button-color);
+    background-color: var(--buttons-on-plum-hover-color);
     transform: translateY(-2px);
 }
 .user_controls a:visited{
@@ -100,7 +105,7 @@ nav {
 }
 
 .nav_button {
-    background-color: var(--button-emp-color);
+    background-color: var(--buttons-on-plum-color);
     color: var(--white-text);
     opacity: 0.75;
     padding: 8px 16px;
@@ -113,7 +118,7 @@ nav {
     display: inline-block;
 }
 .nav_button:hover {
-    background-color: var(--hover-emp-button-color);
+    background-color: var(--buttons-active-hover-color);
     transform: translateY(-2px);
 }
 /*Main product container*/
@@ -126,7 +131,7 @@ nav {
     margin-top: 20px;
     margin-bottom: 30px;
     border-radius: 30px;
-    background-color: var(--background-emp-color);
+    background-color: var(--card-section-color);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -137,7 +142,7 @@ nav {
     color: var(--white-text);
     margin: 20px;
     border-radius: 25px;
-    background-color: var(--primary-emp-color);
+    background-color: var(--card-background-hover-color);
     font-size: 40px;
     font-weight: 700;
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
@@ -148,7 +153,7 @@ footer {
     padding: 20px;
     width: 100%;
     color: var(--dark-text);
-    background-color: var(--button-emp-color);
+    background-color: var(--footer-color);
 }
 footer h4 {
     align-content: space-between;

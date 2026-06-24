@@ -6,17 +6,18 @@
     margin-right: auto;
     border-radius: 30px;
     overflow: hidden;
-    background-color: oldlace;
+    background-color: var(--card-section-color);
     padding: 10px;
 }
 .title_banner{
-    background-color: #ff9999;
+    background-color: var(--card-background-hover-color);
     padding: 20px;
     border-radius: 30px;
-    width:90%;
+    width: 96%;
     min-height: 70px;
     align-content: center;
     margin-bottom: 15px;
+    margin-left: 2%;
 }
 .appointment_info_section{
     max-height: 1000px;
@@ -27,7 +28,7 @@
 }
 .item_section{
     width: 60%;
-    background-color: #2A3B4E;
+    background-color: var(--card-background-color);
     border-radius: 30px;
     padding: 10px;
 }
@@ -36,7 +37,7 @@
     border-radius: 30px;
     width: 100%;
     margin-top: 10px;
-    background-color: lightskyblue;
+    background-color: var(--term-color);
 }
 .delete_button{
     margin-left: auto;
@@ -80,14 +81,14 @@
     min-height: 200px;
     height:100%;
     width:100%;
-    background-color: darkcyan;
+    background-color: var(--header-filter-bacground-color);
 }
 .filter_form_box {
     position: fixed;
     top: 400px;
     bottom: 100px;
     width: 280px;
-    background-color: var(--navbar-color);
+    background-color: var(--header-filter-bacground-color);
     border-radius: 0 25px 25px 0;
     padding: 10px;
     display: flex;
@@ -131,7 +132,7 @@
 .submit_button button{
     width: 100%;
     padding: 12px;
-    background-color: var(--button-color);
+    background-color: var(--buttons-on-plum-color);
     color: #FFFFFF;
     border: none;
     border-radius: 20px;
@@ -143,6 +144,6 @@
     font-family: 'Alegreya Sans SC', sans-serif;
 }
 .submit_button button:hover{
-    background-color: var(--hover-button-color);
+    background-color: var(--buttons-on-plum-hover-color);
     transform: translateY(-2px);
 }

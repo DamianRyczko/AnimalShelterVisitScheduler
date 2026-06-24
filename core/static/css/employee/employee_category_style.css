@@ -10,7 +10,7 @@
 }
 /*category cards*/
 .category_card{
-    background-color: var(--products-emp-back-color);
+    background-color: var(--card-background-color);
     padding: 0;
     margin-bottom: 15px;
     border-radius: 20px;
@@ -37,7 +37,7 @@
 .category_info h4 {
     font-size: 13px;
     font-weight: 600;
-    color: #666666;
+    color: #333;
     margin-bottom: 15px;
     line-height: 1.4;
 }
@@ -68,7 +68,7 @@
 /*function buttons*/
 .function_button {
     padding: 8px 16px;
-    background-color: var(--button-emp-color);
+    background-color: var(--buttons-active-color);
     color: var(--dark-text);
     width: auto;
     text-align: center;
@@ -82,13 +82,13 @@
     text-transform: uppercase;
 }
 .function_button:hover{
-    background-color: var(--hover-emp-button-color);
+    background-color: var(--buttons-active-hover-color);
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 /*add card*/
 .add_card{
-    background-color:var(--products-emp-back-color);
+    background-color:var(--card-background-color);
     height: 150px;
     margin-bottom: 15px;
     display: flex;
@@ -104,7 +104,7 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 .add_card:hover {
-    background-color: #efefef;
+    background-color: var(--card-background-hover-color);
     border-color: #bbb;
     transform: scale(1.02);
 }
